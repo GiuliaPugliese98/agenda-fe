@@ -1,0 +1,1 @@
+enum StateAlert { success, warning, error }
