@@ -73,84 +73,85 @@ class Calendar extends StatelessWidget {
                     date.month == today.month &&
                     date.day == today.day;
                 final eventsForDay = state.events
-                    .where((event) => event.startDate == date)
+                    .where((event) => isSameDay(event.startDate, date))
                     .toList();
-                return GestureDetector(
-                  onTap: () {
-                    // TODO: Dettagli evento
-                  },
-                  child: Container(
-                    margin: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.tabBarUnselected),
-                      color: isToday
-                          ? AppColors.secondaryColor
-                          : AppColors.backgroundColor,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              "$day",
-                              style: TextStyle(
-                                fontWeight: isToday
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                fontSize: 16,
-                              ),
+                return Container(
+                  margin: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.tabBarUnselected),
+                    color: isToday
+                        ? AppColors.secondaryColor
+                        : AppColors.backgroundColor,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            "$day",
+                            style: TextStyle(
+                              fontWeight:
+                                  isToday ? FontWeight.bold : FontWeight.normal,
+                              fontSize: 16,
                             ),
-                            Text(
-                              DateFormat('EEEE').format(date),
-                              style: TextStyle(
-                                fontWeight: isToday
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                fontSize: 14,
-                                color: isToday
-                                    ? AppColors.mainColor
-                                    : AppColors.blackText,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8), // Spazio tra data e eventi
-                        // Lista di eventi da qui
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: eventsForDay.length,
-                            itemBuilder: (context, eventIndex) {
-                              final event = eventsForDay[eventIndex];
-                              return Container(
-                                margin: EdgeInsets.symmetric(
-                                    vertical: 2, horizontal: 4),
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: event.isUserEvent
-                                      ? AppColors.mainColor.withOpacity(0.1)
-                                      : AppColors.backgroundColor,
-                                  borderRadius: BorderRadius.circular(4),
-                                  border: Border.all(
-                                      color: AppColors.tabBarUnselected),
-                                ),
-                                child: Text(
-                                  event.title,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal,
-                                    color: AppColors.blackText,
-                                  ),
-                                  overflow: TextOverflow
-                                      .ellipsis, // Mi serve per tagliare il testo se troppo lungo
-                                  maxLines: 1,
-                                ),
-                              );
-                            },
                           ),
+                          Text(
+                            DateFormat('EEEE').format(date),
+                            style: TextStyle(
+                              fontWeight:
+                                  isToday ? FontWeight.bold : FontWeight.normal,
+                              fontSize: 14,
+                              color: isToday
+                                  ? AppColors.mainColor
+                                  : AppColors.blackText,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8), // Spazio tra data e eventi
+                      // Lista di eventi da qui
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: eventsForDay.length,
+                          itemBuilder: (context, eventIndex) {
+                            final event = eventsForDay[eventIndex];
+                            return GestureDetector(
+                                onTap: () {
+                                  AppRoutes.pushNamed(Routes.eventDetail,
+                                      arguments: {
+                                        StringConstants.eventDetailsKey:
+                                            eventsForDay[eventIndex]
+                                      });
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 2, horizontal: 4),
+                                  padding: EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: event.isUserEvent
+                                        ? AppColors.mainColor.withOpacity(0.1)
+                                        : AppColors.backgroundColor,
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(
+                                        color: AppColors.tabBarUnselected),
+                                  ),
+                                  child: Text(
+                                    event.title,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      color: AppColors.blackText,
+                                    ),
+                                    overflow: TextOverflow
+                                        .ellipsis, // Mi serve per tagliare il testo se troppo lungo
+                                    maxLines: 1,
+                                  ),
+                                ));
+                          },
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
               },
@@ -168,5 +169,11 @@ class Calendar extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 }

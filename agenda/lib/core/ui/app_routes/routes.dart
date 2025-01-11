@@ -3,6 +3,7 @@ import "package:agenda/add_event/state/add_event_cubit.dart";
 import "package:agenda/calendar/screen/calendar_screen.dart";
 import "package:agenda/calendar/state/calendar_cubit.dart";
 import "package:agenda/core/ui/app_routes/routes_constants.dart";
+import "package:agenda/event_details/state/event_details_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:get/get.dart";
@@ -70,6 +71,14 @@ class AppRoutes {
         return _buildRoute(
           BlocProvider(
             create: (_) => AddEventCubit(),
+            child: AddEvent(),
+          ),
+          settings,
+        );
+        case Routes.eventDetail:
+        return _buildRoute(
+          BlocProvider(
+            create: (_) => EventDetailsCubit(Get.arguments),
             child: AddEvent(),
           ),
           settings,
