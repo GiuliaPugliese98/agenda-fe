@@ -1,6 +1,7 @@
+import 'package:agenda/core/ui/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:intl/intl.dart';
 import '../state/calendar_cubit.dart';
 import '../state/calendar_state.dart';
 
@@ -26,66 +27,100 @@ class Calendar extends StatelessWidget {
   }
 
   Widget _buildCalendar(BuildContext context, CalendarLoaded state) {
-    final daysInMonth = DateTime(state.currentMonth.year, state.currentMonth.month + 1, 0).day;
-    final firstDayOfWeek = DateTime(state.currentMonth.year, state.currentMonth.month, 1).weekday;
+    final daysInMonth = DateTime(
+        state.currentMonth.year, state.currentMonth.month + 1, 0).day;
+    final firstDayOfWeek = DateTime(
+        state.currentMonth.year, state.currentMonth.month, 1).weekday;
     final today = DateTime.now();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Calendar - ${state.currentMonth.year}-${state.currentMonth.month}"),
+        title: Text(
+            "Calendar - ${DateFormat('MMMM yyyy').format(state.currentMonth)}"),
         actions: [
           IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () => context.read<CalendarCubit>().goToPreviousMonth(state.currentMonth),
+            icon: Icon(Icons.arrow_back), //TODO devo caricare immagine
+            onPressed: () => context.read<CalendarCubit>().goToPreviousMonth(
+                state.currentMonth),
           ),
           IconButton(
-            icon: Icon(Icons.arrow_forward),
-            onPressed: () => context.read<CalendarCubit>().goToNextMonth(state.currentMonth),
+            icon: Icon(Icons.arrow_forward), //TODO devo caricare immagine
+            onPressed: () =>
+                context.read<CalendarCubit>().goToNextMonth(state.currentMonth),
           ),
         ],
       ),
-      body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7),
-        itemCount: daysInMonth + firstDayOfWeek - 1,
-        itemBuilder: (context, index) {
-          if (index < firstDayOfWeek - 1) {
-            return Container();
-          }
+      body: Column(
+        children: [
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 7),
+              itemCount: daysInMonth + firstDayOfWeek - 1,
+              itemBuilder: (context, index) {
+                if (index < firstDayOfWeek - 1) {
+                  return Container(); // Empty cells for alignment
+                }
 
-          final day = index - firstDayOfWeek + 2;
-          final date = DateTime(state.currentMonth.year, state.currentMonth.month, day);
-          final eventsForDay = state.events.where((event) => event.startDate == date).toList();
+                final day = index - firstDayOfWeek + 2;
+                final date = DateTime(
+                    state.currentMonth.year, state.currentMonth.month, day);
+                final isToday = date.year == today.year &&
+                    date.month == today.month && date.day == today.day;
+                final eventsForDay = state.events.where((event) =>
+                event.startDate == date).toList();
 
-          return GestureDetector(
-            onTap: () {
-              // TODO: Show event details popup
-            },
-            child: Container(
-              margin: EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                color: date == today ? Colors.yellow : Colors.white,
-              ),
-              child: Column(
-                children: [
-                  Text("$day"),
-                  ...eventsForDay.map((event) => Text(
-                    event.title,
-                    style: TextStyle(
-                      color: event.isUserEvent ? Colors.blue : Colors.black,
+                return GestureDetector(
+                  onTap: () {
+                    // TODO: Show event details popup
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.tabBarUnselected),
+                      color: isToday ?  AppColors.secondaryColor :  AppColors.backgroundColor,
                     ),
-                  )),
-                ],
-              ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "$day",
+                          style: TextStyle(
+                            fontWeight: isToday ? FontWeight.bold : FontWeight
+                                .normal,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          DateFormat('EEEE').format(date),
+                          style: TextStyle(
+                            fontWeight: isToday ? FontWeight.bold : FontWeight
+                                .normal,
+                            fontSize: 14,
+                            color: isToday ? AppColors.mainColor : AppColors.blackText,
+                          ),
+                        ),
+                        ...eventsForDay.map((event) =>
+                            Text(
+                              event.title,
+                              style: TextStyle(
+                                color: event.isUserEvent ? AppColors.mainColor: AppColors.blackText,
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }
 }
 
-class CalendarEventModel {
+  class CalendarEventModel {
   final String title;
   final DateTime date;
   final bool isUserEvent;
