@@ -19,11 +19,11 @@ class SplashCubit extends BaseCubit<SplashState> {
       bool isLoggedIn = await userRepository.isLoggedIn();
       if (isLoggedIn) {
         final userController = Get.find<UserController>();
-        UserModel user = await userRepository.getLoggedUser();
+        UserModel user = await userRepository.getUser();
         userController.setUser(user);
 
         if (Get.currentRoute == Routes.login || Get.currentRoute == Routes.splash ) {
-          //TODO
+          AppRoutes.pushNamed(Routes.calendar);
         }
       } else {
         AppRoutes.pushNamed(Routes.preLogin);

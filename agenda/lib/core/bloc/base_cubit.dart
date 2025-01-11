@@ -27,4 +27,22 @@ abstract class BaseCubit<S extends BaseState> extends Cubit<S> {
         state: StateAlert.error)
     );
   }
+
+  void showAlertSuccess(String title, String message, String buttonTextConfirm, {
+    Function()? callbackConfirmButton,
+    Function()? callbackUndoButton,
+    bool showImageAlert = true,
+    bool confirmButton = false
+  } ) {
+    AppRoutes.showCustomDialog(AlertDialogPage(
+        title: title,
+        message: message,
+        buttonTextConfirm: buttonTextConfirm,
+        state: StateAlert.success,
+        callbackConfirm: callbackConfirmButton,
+        callbackUndo: callbackUndoButton,
+        callbackBackButton: callbackConfirmButton,
+        showImage: showImageAlert)
+    );
+  }
 }

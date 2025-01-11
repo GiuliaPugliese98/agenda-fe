@@ -34,7 +34,7 @@ class LoginCubit extends BaseCubit<LoginState> {
     emit(LoginLoading());
     try {
       await userRepository.login(userCredentials);
-      UserModel user = await userRepository.getUser(userCredentials.email.toLowerCase());
+      UserModel user = await userRepository.getUser();
       emit(LoginSuccess(user: user));
     } on UnauthorizedException {
       emit(LoginErrorUserNotAuthorized(error: StringConstants.loginUnauthorized));

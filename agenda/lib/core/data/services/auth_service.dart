@@ -72,11 +72,6 @@ class AuthService {
     await prefs.remove(_refreshTokenKey);
   }
 
-  Future<void> clearUserUuid() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(StringConstants.loggedUserUuidKey);
-  }
-
   Future<bool> isLoggedIn() async {
     final token = await getToken();
     return token != null;

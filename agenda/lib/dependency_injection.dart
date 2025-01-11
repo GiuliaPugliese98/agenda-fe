@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'core/data/repository/event_repository.dart';
 import 'core/data/repository/user_repository.dart';
 import 'core/data/services/auth_service.dart';
 import 'core/network/api_client.dart';
@@ -24,5 +25,7 @@ void _initRepositories() {
   final ApiClient apiClient = Get.find<ApiClient>();
 
   final UserRepository userRepository = UserRepository(apiClient, authService);
+  final EventRepository eventRepository = EventRepository(apiClient);
   Get.put<UserRepository>(userRepository);
+  Get.put<EventRepository>(eventRepository);
 }

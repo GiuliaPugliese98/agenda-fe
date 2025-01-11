@@ -1,10 +1,12 @@
+import "package:agenda/calendar/screen/calendar_screen.dart";
+import "package:agenda/calendar/state/calendar_cubit.dart";
 import "package:agenda/core/ui/app_routes/routes_constants.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:get/get.dart";
 import "package:get/get_core/src/get_main.dart";
-import "../../../login/ui/screens/login_screen.dart";
-import "../../../login/ui/states/login_cubit.dart";
+import "../../../login/ui/screen/login_screen.dart";
+import "../../../login/ui/state/login_cubit.dart";
 import "../../../pre_login/screen/pre_login_screen.dart";
 import "../../../pre_login/state/pre_login_cubit.dart";
 import "../../../registration/screen/registration_screen.dart";
@@ -51,6 +53,14 @@ class AppRoutes {
             create: (_) =>
                 RegistrationCubit(Get.find<UserRepository>(), Get.arguments),
             child: Registration(),
+          ),
+          settings,
+        );
+      case Routes.calendar:
+        return _buildRoute(
+          BlocProvider(
+            create: (_) => CalendarCubit(),
+            child: Calendar(),
           ),
           settings,
         );

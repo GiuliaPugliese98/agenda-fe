@@ -15,7 +15,6 @@ class StringConstants {
   static const String loginPasswordHintText = "Inserisci la tua password";
   static const String loginEmailHintText = "Inserisci la tua email";
   static const String loginButton = "Accedi";
-  static const String loggedUserUuidKey = "loggedUserUuid";
   static const String loginUnauthorized = "Email e/o password errate!";
 
   //Splash"

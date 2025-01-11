@@ -6,12 +6,14 @@ import '../../../core/costants/string_constants.dart';
 import '../../../core/data/models/user_credentials_model/user_credentials_model.dart';
 import '../../../core/enums/form_field_custom_type_enum.dart';
 import '../../../core/enums/text_style_custom_enum.dart';
+import '../../../core/ui/app_routes/routes.dart';
+import '../../../core/ui/app_routes/routes_constants.dart';
 import '../../../core/ui/widgets/custom_button/custom_button.dart';
 import '../../../core/ui/widgets/text_form_custom/screen/text_form_custom_screen.dart';
 import '../../../core/ui/widgets/text_label_custom.dart';
 import '../../../core/utils/handle_dismiss_keyboard.dart';
 import '../../../generated/assets.dart';
-import '../states/login_cubit.dart';
+import '../state/login_cubit.dart';
 import '../user_controller.dart';
 
 class Login extends StatelessWidget {
@@ -35,7 +37,9 @@ class Login extends StatelessWidget {
           } else if (state is LoginSuccess) {
             final userController = Get.find<UserController>();
             userController.setUser(state.user);
-            //TODO
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              AppRoutes.pushNamed(Routes.calendar);
+            });
           } else if (state is LoginLockSignIn) {
             isLoginButtonEnable = false;
           } else if (state is LoginUnlockSignIn) {

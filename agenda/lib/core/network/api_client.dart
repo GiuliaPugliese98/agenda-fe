@@ -87,6 +87,28 @@ class ApiClient {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>> put(
+      String endpoint, Map<String, dynamic> data) async {
+    try {
+      final response = await dio.put(endpoint, data: data);
+      return response.data;
+    } catch (e) {
+      if (e is DioError && e.response?.statusCode == HttpStatus.notFound) {
+        throw NotFoundException('Not found');
+      } else if (e is DioError &&
+          e.response?.statusCode == HttpStatus.internalServerError) {
+        throw InternalServerErrorException('Internal Server Error');
+      } else if (e is DioError &&
+          e.response?.statusCode == HttpStatus.unauthorized) {
+        throw UnauthorizedException('Unauthorized');
+      } else if (e is DioError &&
+          e.response?.statusCode == HttpStatus.conflict) {
+        throw ConflictException('Conflict');
+      }
+      rethrow;
+    }
+  }
 }
 
 class NotFoundException implements Exception {

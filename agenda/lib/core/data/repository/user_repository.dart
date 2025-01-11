@@ -1,5 +1,3 @@
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../costants/string_constants.dart';
 import '../../network/api_client.dart';
 import '../../repository/base_repository.dart';
 import '../models/user_credentials_model/user_credentials_model.dart';
@@ -30,30 +28,17 @@ class UserRepository extends BaseRepository {
   }
 
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String uuid =
-        prefs.getString(StringConstants.loggedUserUuidKey).toString();
-    await apiClient.delete('auth/logout/$uuid', {});
-
+    await apiClient.delete('auth/logout', {});
     await authService.clearToken();
     await authService.clearRefreshToken();
-    await authService.clearUserUuid();
   }
 
   Future<bool> isLoggedIn() async {
     return await authService.isLoggedIn();
   }
 
-  Future<UserModel> getUser(String email) async {
-    final response = await apiClient.get('users/$email');
-    return UserModel.fromJson(response);
-  }
-
-  Future<UserModel> getLoggedUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String uuid =
-        await prefs.getString(StringConstants.loggedUserUuidKey).toString();
-    final response = await apiClient.get('users/uuid/$uuid');
+  Future<UserModel> getUser() async {
+    final response = await apiClient.get('users/');
     return UserModel.fromJson(response);
   }
 }

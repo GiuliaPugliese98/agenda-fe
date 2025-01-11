@@ -9,7 +9,5 @@ class UserController extends GetxController {
 
   Future<void> setUser(UserModel newUser) async {
     user.value = newUser;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(StringConstants.loggedUserUuidKey, newUser.name);
   }
 }
