@@ -1,3 +1,5 @@
+import "package:agenda/add_event/screen/add_event_screen.dart";
+import "package:agenda/add_event/state/add_event_cubit.dart";
 import "package:agenda/calendar/screen/calendar_screen.dart";
 import "package:agenda/calendar/state/calendar_cubit.dart";
 import "package:agenda/core/ui/app_routes/routes_constants.dart";
@@ -61,6 +63,14 @@ class AppRoutes {
           BlocProvider(
             create: (_) => CalendarCubit(),
             child: Calendar(),
+          ),
+          settings,
+        );
+      case Routes.addEvent:
+        return _buildRoute(
+          BlocProvider(
+            create: (_) => AddEventCubit(),
+            child: AddEvent(),
           ),
           settings,
         );

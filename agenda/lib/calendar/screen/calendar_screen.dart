@@ -1,7 +1,9 @@
+import 'package:agenda/core/ui/app_routes/routes.dart';
+import 'package:agenda/core/ui/app_routes/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../../add_event/screen/add_event_screen.dart';
+import '../../core/base_widgets/base_widget.dart';
 import '../../core/costants/string_constants.dart';
 import '../../core/ui/theme/app_colors.dart';
 import '../../core/ui/widgets/custom_button/custom_button.dart';
@@ -22,7 +24,7 @@ class Calendar extends StatelessWidget {
           } else if (state is CalendarError) {
             return Center(child: Text(state.message));
           } else {
-            return Center(child: Text("No data available"));
+            return Center(child: Text(StringConstants.noData));
           }
         },
       ),
@@ -30,49 +32,49 @@ class Calendar extends StatelessWidget {
   }
 
   Widget _buildCalendar(BuildContext context, CalendarLoaded state) {
-    final daysInMonth = DateTime(
-        state.currentMonth.year, state.currentMonth.month + 1, 0).day;
-    final firstDayOfWeek = DateTime(
-        state.currentMonth.year, state.currentMonth.month, 1).weekday;
+    final daysInMonth =
+        DateTime(state.currentMonth.year, state.currentMonth.month + 1, 0).day;
+    final firstDayOfWeek =
+        DateTime(state.currentMonth.year, state.currentMonth.month, 1).weekday;
     final today = DateTime.now();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-            "Calendar - ${DateFormat('MMMM yyyy').format(state.currentMonth)}"),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.arrow_back), // Immagine personalizzata TODO
-            onPressed: () => context.read<CalendarCubit>().goToPreviousMonth(
-                state.currentMonth),
-          ),
-          IconButton(
-            icon: Icon(Icons.arrow_forward), // Immagine personalizzata TODO
-            onPressed: () =>
-                context.read<CalendarCubit>().goToNextMonth(state.currentMonth),
-          ),
-        ],
-      ),
+    return BaseWidget(
+      navBarTitle:
+          "Calendar - ${DateFormat('MMMM yyyy').format(state.currentMonth)}",
+      withOutNavigationBar: false,
+      isBackGestureEnabled: true,
+      actions: [
+        IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => context
+              .read<CalendarCubit>()
+              .goToPreviousMonth(state.currentMonth),
+        ),
+        IconButton(
+          icon: Icon(Icons.arrow_forward),
+          onPressed: () =>
+              context.read<CalendarCubit>().goToNextMonth(state.currentMonth),
+        ),
+      ],
       body: Column(
         children: [
           Expanded(
             child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7),
+              gridDelegate:
+                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7),
               itemCount: daysInMonth + firstDayOfWeek - 1,
               itemBuilder: (context, index) {
                 if (index < firstDayOfWeek - 1) {
                   return Container(); // Celle vuote per allineamento
                 }
-
                 final day = index - firstDayOfWeek + 2;
                 final date = DateTime(
                     state.currentMonth.year, state.currentMonth.month, day);
                 final isToday = date.year == today.year &&
-                    date.month == today.month && date.day == today.day;
-                final eventsForDay = state.events.where((event) =>
-                event.startDate == date).toList();
-
+                    date.month == today.month &&
+                    date.day == today.day;
+                final eventsForDay = state.events
+                    .where((event) => event.startDate == date)
+                    .toList();
                 return GestureDetector(
                   onTap: () {
                     // TODO: Dettagli evento
@@ -81,27 +83,34 @@ class Calendar extends StatelessWidget {
                     margin: EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       border: Border.all(color: AppColors.tabBarUnselected),
-                      color: isToday ? AppColors.secondaryColor : AppColors.backgroundColor,
+                      color: isToday
+                          ? AppColors.secondaryColor
+                          : AppColors.backgroundColor,
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        // Data e nome del giorno centrati in alto
                         Column(
                           children: [
                             Text(
                               "$day",
                               style: TextStyle(
-                                fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+                                fontWeight: isToday
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
                                 fontSize: 16,
                               ),
                             ),
                             Text(
                               DateFormat('EEEE').format(date),
                               style: TextStyle(
-                                fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+                                fontWeight: isToday
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
                                 fontSize: 14,
-                                color: isToday ? AppColors.mainColor : AppColors.blackText,
+                                color: isToday
+                                    ? AppColors.mainColor
+                                    : AppColors.blackText,
                               ),
                             ),
                           ],
@@ -114,14 +123,16 @@ class Calendar extends StatelessWidget {
                             itemBuilder: (context, eventIndex) {
                               final event = eventsForDay[eventIndex];
                               return Container(
-                                margin: EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 2, horizontal: 4),
                                 padding: EdgeInsets.all(4),
                                 decoration: BoxDecoration(
                                   color: event.isUserEvent
                                       ? AppColors.mainColor.withOpacity(0.1)
                                       : AppColors.backgroundColor,
                                   borderRadius: BorderRadius.circular(4),
-                                  border: Border.all(color: AppColors.tabBarUnselected),
+                                  border: Border.all(
+                                      color: AppColors.tabBarUnselected),
                                 ),
                                 child: Text(
                                   event.title,
@@ -130,7 +141,8 @@ class Calendar extends StatelessWidget {
                                     fontWeight: FontWeight.normal,
                                     color: AppColors.blackText,
                                   ),
-                                  overflow: TextOverflow.ellipsis, // Mi serve per tagliare il testo se troppo lungo
+                                  overflow: TextOverflow
+                                      .ellipsis, // Mi serve per tagliare il testo se troppo lungo
                                   maxLines: 1,
                                 ),
                               );
@@ -149,10 +161,7 @@ class Calendar extends StatelessWidget {
             child: CustomButton(
               text: StringConstants.addEvent,
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddEvent()),
-                );
+                AppRoutes.pushNamed(Routes.addEvent);
               },
             ),
           ),

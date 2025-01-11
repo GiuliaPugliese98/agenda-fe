@@ -72,6 +72,9 @@ class StringConstants {
   static const String modelUserAuthenticationTokens = "authenticationTokens";
   static const String modelUserNotifyFirstLogin = "notifyFirstLogin";
 
+  //Calendar
+  static const String noData = "No data available";
+
   //Add Event
   static const String addEvent = "Add Event";
   static const String addEventTitle = "Title";
@@ -79,4 +82,14 @@ class StringConstants {
   static const String addEventStartDate = "Select Start Date";
   static const String addEventEndDate = "Select End Date";
   static const String addEventSave = "Save Event";
+  static const String addEventTitleHintText = "Add your event title";
+  static const String addEventDescriptionHintText = "Add your event description";
+
+  //Event Details
+  static const String eventDetailsKey = "";
+  static const String eventDetailsTitle = "Event Details";
+  static const String deleteEvent = "Delete Event";
+  static const String editEvent = "Edit Event";
+  static const String unregisterFromEvent = "Unregister from Event";
+  static const String registerToEvent = "Register to Event";
 }

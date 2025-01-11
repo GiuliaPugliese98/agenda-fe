@@ -5,6 +5,7 @@ part 'event_model.g.dart';
 
 @JsonSerializable()
 class EventModel extends EventModelToAdd {
+  final String uuid;
   final List<String>? participantsEmails;
   final List<String>? notes;
   final List<String>? attachments;
@@ -15,6 +16,7 @@ class EventModel extends EventModelToAdd {
     required super.description,
     required super.startDate,
     required super.endDate,
+    required this.uuid,
     required this.participantsEmails,
     required this.notes,
     required this.attachments,

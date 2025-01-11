@@ -11,6 +11,7 @@ EventModel _$EventModelFromJson(Map<String, dynamic> json) => EventModel(
       description: json['description'] as String,
       startDate: DateTime.parse(json['startDate'] as String),
       endDate: DateTime.parse(json['endDate'] as String),
+      uuid: json['uuid'] as String,
       participantsEmails: (json['participantsEmails'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -28,6 +29,7 @@ Map<String, dynamic> _$EventModelToJson(EventModel instance) =>
       'description': instance.description,
       'startDate': instance.startDate.toIso8601String(),
       'endDate': instance.endDate.toIso8601String(),
+      'uuid': instance.uuid,
       'participantsEmails': instance.participantsEmails,
       'notes': instance.notes,
       'attachments': instance.attachments,

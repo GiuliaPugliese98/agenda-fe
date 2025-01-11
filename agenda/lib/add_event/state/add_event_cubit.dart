@@ -15,7 +15,7 @@ class AddEventCubit extends BaseCubit<AddEventState> {
     emit(AddEventLoaded());
   }
 
-  void unlockAdd() async {
+  void unlockAdd() {
     emit(AddEventUnlockAdd());
   }
 

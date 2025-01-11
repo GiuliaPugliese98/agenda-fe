@@ -12,6 +12,7 @@ class BaseWidget extends StatelessWidget {
   final Widget? body;
   final bool isBackGestureEnabled;
   final VoidCallback? customBackAction;
+  final List<Widget>? actions;
 
   BaseWidget({
     Key? key,
@@ -23,6 +24,7 @@ class BaseWidget extends StatelessWidget {
     required this.body,
     this.isBackGestureEnabled = false,
     this.customBackAction,
+    this.actions,
   }) : super(key: key);
 
   @override
@@ -44,6 +46,7 @@ class BaseWidget extends StatelessWidget {
             backgroundColor: navigationBackgroundColor,
             elevation: navigationWithShadow ? 4.0 : 0.0,
             automaticallyImplyLeading: false,
+            actions: actions,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: false,
               titlePadding: EdgeInsets.only(left: 16.0, bottom: 16.0),
