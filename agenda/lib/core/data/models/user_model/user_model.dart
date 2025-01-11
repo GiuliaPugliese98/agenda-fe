@@ -12,7 +12,7 @@ class UserModel extends BaseModel {
   UserModel({
     required this.name,
     required this.email,
-    required this.password
+    this.password = "",
   }) : super.fromJson({});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
