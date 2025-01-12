@@ -2,7 +2,9 @@ import "package:agenda/add_event/screen/add_event_screen.dart";
 import "package:agenda/add_event/state/add_event_cubit.dart";
 import "package:agenda/calendar/screen/calendar_screen.dart";
 import "package:agenda/calendar/state/calendar_cubit.dart";
+import "package:agenda/core/data/models/event_model/event_model.dart";
 import "package:agenda/core/ui/app_routes/routes_constants.dart";
+import "package:agenda/event_details/screen/event_details_screen.dart";
 import "package:agenda/event_details/state/event_details_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -16,6 +18,7 @@ import "../../../registration/screen/registration_screen.dart";
 import "../../../registration/state/registration_cubit.dart";
 import "../../../splash/ui/screen/splash_screen.dart";
 import "../../../splash/ui/state/splash_cubit.dart";
+import "../../costants/string_constants.dart";
 import "../../data/repository/user_repository.dart";
 import "../widgets/alert_dialog/cubit/alert_dialog_cubit.dart";
 import "../widgets/thank_you_page/state/thank_you_page_cubit.dart";
@@ -79,7 +82,7 @@ class AppRoutes {
         return _buildRoute(
           BlocProvider(
             create: (_) => EventDetailsCubit(Get.arguments),
-            child: AddEvent(),
+            child: EventDetails(),
           ),
           settings,
         );

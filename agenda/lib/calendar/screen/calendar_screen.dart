@@ -118,10 +118,12 @@ class Calendar extends StatelessWidget {
                             final event = eventsForDay[eventIndex];
                             return GestureDetector(
                                 onTap: () {
+
                                   AppRoutes.pushNamed(Routes.eventDetail,
                                       arguments: {
                                         StringConstants.eventDetailsKey:
-                                            eventsForDay[eventIndex]
+                                            eventsForDay[eventIndex],
+                                        StringConstants.isUserEventKey: eventsForDay[eventIndex].isUserEvent
                                       });
                                 },
                                 child: Container(

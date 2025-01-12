@@ -1,3 +1,4 @@
+import 'package:agenda/core/data/repository/user_repository.dart';
 import 'package:get/get.dart';
 
 import '../../core/bloc/base_cubit.dart';
@@ -6,6 +7,7 @@ import 'calendar_state.dart';
 
 class CalendarCubit extends BaseCubit<CalendarState> {
   final EventRepository eventRepository = Get.find<EventRepository>();
+  final UserRepository userRepository = Get.find<UserRepository>();
 
   CalendarCubit() : super(CalendarInit()) {
     loadEventsForMonth(DateTime.now());
@@ -15,6 +17,7 @@ class CalendarCubit extends BaseCubit<CalendarState> {
     emit(CalendarLoading());
     try {
       final events = await eventRepository.getAllEvents(); //TODO per mese!
+      final user = await userRepository.getUser();
       emit(CalendarLoaded(events: events, currentMonth: month));
     } catch (e) {
       emit(CalendarError(e.toString()));

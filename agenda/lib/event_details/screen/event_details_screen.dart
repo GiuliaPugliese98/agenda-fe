@@ -17,14 +17,36 @@ import '../state/event_details_state.dart';
 class EventDetails extends StatelessWidget {
   late final EventModel event;
   late final UserModel user;
-  final bool isCreator;
+  late final bool isCreator;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
-  EventDetails({required this.isCreator, required this.event});
-
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => EventDetailsCubit(Get.arguments),
+      child: BlocBuilder<EventDetailsCubit, EventDetailsState>(
+        builder: (context, state) {
+          if (state is EventDetailsLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is EventDetailsLoaded) {
+            return _buildEventDetails(context, state);
+          } else if (state is EventDetailsError) {
+            return Center(child: Text(state.message));
+          } else {
+            return Center(child: Text(StringConstants.noData));
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildEventDetails(BuildContext context, EventDetailsLoaded state) {
+    event = state.event;
+    user = state.user;
+    isCreator = state.isUserEvent;
+    titleController.text = event.title;
+    descriptionController.text = event.description;
     if (isCreator) {
       return _buildCreatorView(context);
     } else {
@@ -33,32 +55,20 @@ class EventDetails extends StatelessWidget {
   }
 
   Widget _buildCreatorView(BuildContext context) {
-    return BlocProvider(
-      create: (context) => EventDetailsCubit(Get.arguments),
-      child: BlocListener<EventDetailsCubit, EventDetailsState>(
-        listener: (context, state) {
-          if (state is EventDetailsSuccess) {
-            context.read<EventDetailsCubit>().showSuccessDialog(state.message);
-          } else if (state is EventDetailsError) {
-            context.read<EventDetailsCubit>().showErrorDialog(state.message);
-          }
-        },
-        child: BlocBuilder<EventDetailsCubit, EventDetailsState>(
-          builder: (context, state) {
-            if (state is EventDetailsLoaded) {
-              event = state.event;
-              user = state.user;
-              titleController.text = event.title;
-              descriptionController.text = event.description;
-            }
-            return BaseWidget(
-              navBarTitle: StringConstants.eventDetailsTitle,
-              withOutNavigationBar: false,
-              isBackGestureEnabled: true,
-              body: Scaffold(
-                  body: _buildEventDetailsCreatorWidget(context, event)),
-            );
-          },
+    return BlocListener<EventDetailsCubit, EventDetailsState>(
+      listener: (context, state) {
+        if (state is EventDetailsSuccess) {
+          context.read<EventDetailsCubit>().showSuccessDialog(state.message);
+        } else if (state is EventDetailsError) {
+          context.read<EventDetailsCubit>().showErrorDialog(state.message);
+        }
+      },
+      child: BaseWidget(
+        navBarTitle: StringConstants.eventDetailsTitle,
+        withOutNavigationBar: false,
+        isBackGestureEnabled: true,
+        body: Scaffold(
+          body: _buildEventDetailsCreatorWidget(context, event),
         ),
       ),
     );
@@ -69,7 +79,7 @@ class EventDetails extends StatelessWidget {
       navBarTitle: StringConstants.eventDetailsTitle,
       withOutNavigationBar: false,
       isBackGestureEnabled: true,
-      body: Scaffold(body: _buildEventDetailsParticipantWidget(context)),
+      body: _buildEventDetailsParticipantWidget(context),
     );
   }
 
@@ -102,6 +112,9 @@ class EventDetails extends StatelessWidget {
 
   Widget _buildEventDetailsParticipantWidget(BuildContext context) {
     final cubit = context.read<EventDetailsCubit>();
+    debugPrint("Event: $event");
+    debugPrint("User: $user");
+    debugPrint("isCreator: $isCreator");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -109,20 +122,20 @@ class EventDetails extends StatelessWidget {
         TextLabelCustom(event.description,
             styleEnum: TextStyleCustomEnum.italicNormal),
         const SizedBox(height: 20),
-        event.participantsEmails!.contains(user)
+        event.safeParticipantsEmails!.contains(user.email)
             ? CustomButton(
-          text: StringConstants.unregisterFromEvent,
-          onPressed: () {
-            cubit.unregisterFromEvent(event.uuid);
-          },
-          fillColor: AppColors.mainColor,
-        )
+                text: StringConstants.unregisterFromEvent,
+                onPressed: () {
+                  cubit.unregisterFromEvent(event.uuid);
+                },
+                fillColor: AppColors.mainColor,
+              )
             : CustomButton(
-          text: StringConstants.registerToEvent,
-          onPressed: () {
-            cubit.registerToEvent(event.uuid);
-          },
-        ),
+                text: StringConstants.registerToEvent,
+                onPressed: () {
+                  cubit.registerToEvent(event.uuid);
+                },
+              ),
       ],
     ).paddingAll(16.0);
   }

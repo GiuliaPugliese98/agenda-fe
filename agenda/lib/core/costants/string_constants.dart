@@ -86,7 +86,8 @@ class StringConstants {
   static const String addEventDescriptionHintText = "Add your event description";
 
   //Event Details
-  static const String eventDetailsKey = "";
+  static const String eventDetailsKey = "eventDetailsKey";
+  static const String isUserEventKey = "isUserEventKey";
   static const String eventDetailsTitle = "Event Details";
   static const String deleteEvent = "Delete Event";
   static const String editEvent = "Edit Event";

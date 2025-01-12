@@ -1,3 +1,4 @@
+import 'package:agenda/core/data/models/user_model/user_model.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';

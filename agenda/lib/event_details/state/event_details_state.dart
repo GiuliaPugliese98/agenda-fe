@@ -5,15 +5,22 @@ import '../../core/data/models/user_model/user_model.dart';
 
 abstract class EventDetailsState extends BaseState{}
 
-class EventDetailsInit extends EventDetailsState {}
+class EventDetailsInit extends EventDetailsState {
+  @override
+  List<Object?> get props => [];
+}
 
-class EventDetailsLoading extends EventDetailsState {}
+class EventDetailsLoading extends EventDetailsState {
+  @override
+  List<Object?> get props => [];
+}
 
 class EventDetailsLoaded extends EventDetailsState {
   final EventModel event;
   final UserModel user;
+  final bool isUserEvent;
 
-  EventDetailsLoaded({required this.event, required this.user});
+  EventDetailsLoaded({required this.event, required this.user, required this.isUserEvent});
 }
 
 class EventDetailsError extends EventDetailsState {

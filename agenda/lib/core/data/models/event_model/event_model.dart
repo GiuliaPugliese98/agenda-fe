@@ -27,4 +27,6 @@ class EventModel extends EventModelToAdd {
 
   @override
   Map<String, dynamic> toJson({bool isReference = false}) => _$EventModelToJson(this);
+
+  List<String> get safeParticipantsEmails => participantsEmails ?? [];
 }
