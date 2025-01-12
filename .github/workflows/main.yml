@@ -21,15 +21,16 @@ jobs:
       with:
         node-version: '16'
 
-    # Installa Flutter
-    - name: Install Flutter
+     # Scarica e installa Flutter versione 3.22.2
+    - name: Install Flutter 3.22.2
       run: |
         sudo apt-get update
         sudo apt-get install -y wget unzip
-        wget https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.13.5-stable.tar.xz
-        tar -xf flutter_linux_3.13.5-stable.tar.xz
+        wget https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.22.2-stable.tar.xz
+        tar -xf flutter_linux_3.22.2-stable.tar.xz
         export PATH="$PATH:$PWD/flutter/bin"
         flutter doctor
+        flutter --version
 
     # Build dell'applicazione Flutter per il web
     - name: Build Flutter Web
