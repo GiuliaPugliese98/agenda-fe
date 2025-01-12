@@ -73,7 +73,7 @@ class _AddEventState extends State<AddEvent> {
                 children: [
                   TextFormFieldCustom(
                     onChanged: (_) => checkForm(context),
-                    labelText: StringConstants.addEventTitle,
+                    labelText: StringConstants.eventTitle,
                     textEditingController: titleController,
                     hintText: StringConstants.addEventTitleHintText,
                     formFieldType: FormFieldCustomTypeEnum.text,
@@ -81,7 +81,7 @@ class _AddEventState extends State<AddEvent> {
                   SizedBox(height: 16),
                   TextFormFieldCustom(
                     onChanged: (_) => checkForm(context),
-                    labelText: StringConstants.addEventDescription,
+                    labelText: StringConstants.eventDescription,
                     textEditingController: descriptionController,
                     hintText: StringConstants.addEventDescriptionHintText,
                     formFieldType: FormFieldCustomTypeEnum.text,

@@ -13,6 +13,7 @@ import '../../core/ui/widgets/text_label_custom.dart';
 import '../../core/ui/theme/app_colors.dart';
 import '../state/event_details_cubit.dart';
 import '../state/event_details_state.dart';
+import 'package:intl/intl.dart';
 
 class EventDetails extends StatelessWidget {
   late final EventModel event;
@@ -67,8 +68,8 @@ class EventDetails extends StatelessWidget {
         navBarTitle: StringConstants.eventDetailsTitle,
         withOutNavigationBar: false,
         isBackGestureEnabled: true,
-        body: Scaffold(
-          body: _buildEventDetailsCreatorWidget(context, event),
+        body: SingleChildScrollView(
+          child: _buildEventDetailsCreatorWidget(context),
         ),
       ),
     );
@@ -79,26 +80,25 @@ class EventDetails extends StatelessWidget {
       navBarTitle: StringConstants.eventDetailsTitle,
       withOutNavigationBar: false,
       isBackGestureEnabled: true,
-      body: _buildEventDetailsParticipantWidget(context),
+      body: SingleChildScrollView(
+          child: _buildEventDetailsParticipantWidget(context)),
     );
   }
 
   Widget _buildEventDetailsCreatorWidget(
-      BuildContext context, EventModel event) {
+      BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextLabelCustom(event.title, styleEnum: TextStyleCustomEnum.bold),
-        TextLabelCustom(event.description,
-            styleEnum: TextStyleCustomEnum.italicNormal),
-        const SizedBox(height: 20),
+        buildEventDetailsContent(context),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
         CustomButton(
           onPressed: () {
             AppRoutes.pushNamed(Routes.eventDetail, arguments: event);
           },
           text: StringConstants.editEvent,
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
         CustomButton(
           onPressed: () {
             context.read<EventDetailsCubit>().deleteEvent(event.uuid);
@@ -110,15 +110,14 @@ class EventDetails extends StatelessWidget {
     ).paddingAll(16.0);
   }
 
-  Widget _buildEventDetailsParticipantWidget(BuildContext context) {
+  Widget _buildEventDetailsParticipantWidget(
+      BuildContext context) {
     final cubit = context.read<EventDetailsCubit>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextLabelCustom(event.title, styleEnum: TextStyleCustomEnum.bold),
-        TextLabelCustom(event.description,
-            styleEnum: TextStyleCustomEnum.italicNormal),
-        const SizedBox(height: 20),
+        buildEventDetailsContent(context),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
         event.safeParticipantsEmails!.contains(user.email)
             ? CustomButton(
                 text: StringConstants.unregisterFromEvent,
@@ -135,5 +134,68 @@ class EventDetails extends StatelessWidget {
               ),
       ],
     ).paddingAll(16.0);
+  }
+
+  Widget buildEventDetailsContent(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextLabelCustom(StringConstants.eventTitle,
+            styleEnum: TextStyleCustomEnum.bold),
+        TextLabelCustom(event.title, styleEnum: TextStyleCustomEnum.normal),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+        TextLabelCustom(StringConstants.eventDescription,
+            styleEnum: TextStyleCustomEnum.bold),
+        TextLabelCustom(event.description,
+            styleEnum: TextStyleCustomEnum.italicNormal),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+        TextLabelCustom(StringConstants.startDate,
+            styleEnum: TextStyleCustomEnum.bold),
+        TextLabelCustom(formatDateWithOrdinal(event.startDate),
+            styleEnum: TextStyleCustomEnum.italicNormal),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+        TextLabelCustom(StringConstants.endDate,
+            styleEnum: TextStyleCustomEnum.bold),
+        TextLabelCustom(formatDateWithOrdinal(event.endDate),
+            styleEnum: TextStyleCustomEnum.italicNormal),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+        TextLabelCustom(StringConstants.participants,
+            styleEnum: TextStyleCustomEnum.bold),
+        event.safeParticipantsEmails.isEmpty
+            ? TextLabelCustom(StringConstants.emptyParticipants)
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...event.safeParticipantsEmails
+                      .map((email) => TextLabelCustom(email))
+                ],
+              ),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+        TextLabelCustom(StringConstants.notes,
+            styleEnum: TextStyleCustomEnum.bold),
+        event.safeNotes.isEmpty
+            ? TextLabelCustom(StringConstants.emptyNotes)
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...event.safeNotes.map((note) => TextLabelCustom(note))
+                ],
+              ),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+      ],
+    );
+  }
+
+  String formatDateWithOrdinal(DateTime date) {
+    int day = date.day;
+    String suffix = (day == 1 || day == 21 || day == 31)
+        ? 'st'
+        : (day == 2 || day == 22)
+            ? 'nd'
+            : (day == 3 || day == 23)
+                ? 'rd'
+                : 'th';
+
+    return '$day$suffix ${DateFormat('MMMM yyyy').format(date)}';
   }
 }

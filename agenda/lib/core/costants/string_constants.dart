@@ -77,8 +77,8 @@ class StringConstants {
 
   //Add Event
   static const String addEvent = "Add Event";
-  static const String addEventTitle = "Title";
-  static const String addEventDescription = "Description";
+  static const String eventTitle = "Title";
+  static const String eventDescription = "Description";
   static const String addEventStartDate = "Select Start Date";
   static const String addEventEndDate = "Select End Date";
   static const String addEventSave = "Save Event";
@@ -87,10 +87,15 @@ class StringConstants {
 
   //Event Details
   static const String eventDetailsKey = "eventDetailsKey";
-  static const String createdByLoggedUserKey = "isUserEventKey";
   static const String eventDetailsTitle = "Event Details";
   static const String deleteEvent = "Delete Event";
   static const String editEvent = "Edit Event";
   static const String unregisterFromEvent = "Unregister from Event";
   static const String registerToEvent = "Register to Event";
+  static const String participants = "Participants";
+  static const String emptyParticipants = "No participants are present for this event";
+  static const String notes = "Notes";
+  static const String emptyNotes = "No notes are present for this event";
+  static const String startDate = "Start Date";
+  static const String endDate = "End Date";
 }

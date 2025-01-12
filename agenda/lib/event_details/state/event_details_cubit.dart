@@ -18,7 +18,7 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
 
   EventDetailsCubit(Map<String, dynamic> arguments) : super(EventDetailsInit()) {
     event = arguments[StringConstants.eventDetailsKey];
-    createdByLoggedUser = arguments[StringConstants.createdByLoggedUserKey];
+    createdByLoggedUser = event.createdByLoggedUser;
     loadEventDetails(arguments);
   }
 
