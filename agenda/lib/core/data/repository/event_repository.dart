@@ -24,8 +24,8 @@ class EventRepository extends BaseRepository {
     await apiClient.put('events/$eventId', updatedEvent.toJson());
   }
 
-  Future<void> deleteEvent(String eventId) async {
-    //TODO
+  Future<void> deleteEvent(String eventUuid) async {
+    await apiClient.delete('events/$eventUuid', {});
   }
 
   Future<void> registerToEvent(String eventId) async {

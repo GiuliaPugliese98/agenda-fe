@@ -6,8 +6,6 @@ import '../../core/base_widgets/base_widget.dart';
 import '../../core/costants/string_constants.dart';
 import '../../core/data/models/event_model/event_model.dart';
 import '../../core/enums/text_style_custom_enum.dart';
-import '../../core/ui/app_routes/routes.dart';
-import '../../core/ui/app_routes/routes_constants.dart';
 import '../../core/ui/widgets/custom_button/custom_button.dart';
 import '../../core/ui/widgets/text_label_custom.dart';
 import '../../core/ui/theme/app_colors.dart';
@@ -25,21 +23,31 @@ class EventDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => EventDetailsCubit(Get.arguments),
-      child: BlocBuilder<EventDetailsCubit, EventDetailsState>(
-        builder: (context, state) {
-          if (state is EventDetailsLoading) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is EventDetailsLoaded) {
-            return _buildEventDetails(context, state);
-          } else if (state is EventDetailsError) {
-            return Center(child: Text(state.message));
-          } else {
-            return Center(child: Text(StringConstants.noData));
-          }
-        },
-      ),
-    );
+        create: (context) => EventDetailsCubit(Get.arguments),
+        child: BlocListener<EventDetailsCubit, EventDetailsState>(
+          listener: (context, state) {
+            if (state is EventDetailsSuccess) {
+              context
+                  .read<EventDetailsCubit>()
+                  .showSuccessDialog(state.message);
+            } else if (state is EventDetailsError) {
+              context
+                  .read<EventDetailsCubit>()
+                  .showErrorDialog(state.message);
+            }
+          },
+          child: BlocBuilder<EventDetailsCubit, EventDetailsState>(
+            builder: (context, state) {
+              if (state is EventDetailsLoading) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is EventDetailsLoaded) {
+                return _buildEventDetails(context, state);
+              } else {
+                return Center(child: Text(StringConstants.noData));
+              }
+            },
+          ),
+        ));
   }
 
   Widget _buildEventDetails(BuildContext context, EventDetailsLoaded state) {
@@ -85,39 +93,30 @@ class EventDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildEventDetailsCreatorWidget(
-      BuildContext context) {
+  Widget _buildEventDetailsCreatorWidget(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         buildEventDetailsContent(context),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-        CustomButton(
-          onPressed: () {
-            AppRoutes.pushNamed(Routes.eventDetail, arguments: event);
-          },
-          text: StringConstants.editEvent,
-        ),
         SizedBox(height: MediaQuery.of(context).size.height * 0.03),
         CustomButton(
           onPressed: () {
             context.read<EventDetailsCubit>().deleteEvent(event.uuid);
           },
           text: StringConstants.deleteEvent,
-          fillColor: AppColors.mainColor,
+          fillColor: AppColors.secondaryColor,
         ),
       ],
     ).paddingAll(16.0);
   }
 
-  Widget _buildEventDetailsParticipantWidget(
-      BuildContext context) {
+  Widget _buildEventDetailsParticipantWidget(BuildContext context) {
     final cubit = context.read<EventDetailsCubit>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         buildEventDetailsContent(context),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
         event.safeParticipantsEmails!.contains(user.email)
             ? CustomButton(
                 text: StringConstants.unregisterFromEvent,
@@ -182,6 +181,13 @@ class EventDetails extends StatelessWidget {
                 ],
               ),
         SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+        CustomButton(
+          onPressed: () {
+            //TODO add note
+          },
+          text: StringConstants.addNote,
+          fillColor: AppColors.secondaryColor,
+        ),
       ],
     );
   }

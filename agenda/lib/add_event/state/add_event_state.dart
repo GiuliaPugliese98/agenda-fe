@@ -42,3 +42,12 @@ class AddEventUnlockAdd extends AddEventState {
   @override
   List<Object> get props => [];
 }
+class EndDateLock extends AddEventState {
+  @override
+  List<Object> get props => [];
+}
+
+class EndDateUnlock extends AddEventState {
+  @override
+  List<Object> get props => [];
+}

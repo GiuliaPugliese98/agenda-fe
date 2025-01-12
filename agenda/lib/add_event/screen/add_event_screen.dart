@@ -25,6 +25,7 @@ class _AddEventState extends State<AddEvent> {
   DateTime? startDate;
   DateTime? endDate;
   bool isAddButtonEnabled = false;
+  bool isEndDateButtonEnabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +41,11 @@ class _AddEventState extends State<AddEvent> {
             isAddButtonEnabled = true;
           } else if (state is AddEventLockAdd) {
             isAddButtonEnabled = false;
+          }
+          if (state is EndDateUnlock) {
+            isEndDateButtonEnabled = true;
+          } else if (state is EndDateLock) {
+            isEndDateButtonEnabled = false;
           } else if (state is AddEventSuccess) {
             context.read<AddEventCubit>().showSuccessDialog(state.message);
           } else if (state is AddEventError) {
@@ -72,7 +78,7 @@ class _AddEventState extends State<AddEvent> {
               child: Column(
                 children: [
                   TextFormFieldCustom(
-                    onChanged: (_) => checkForm(context),
+                    onChanged: (_) => checkAddEventButton(context),
                     labelText: StringConstants.eventTitle,
                     textEditingController: titleController,
                     hintText: StringConstants.addEventTitleHintText,
@@ -80,7 +86,7 @@ class _AddEventState extends State<AddEvent> {
                   ),
                   SizedBox(height: 16),
                   TextFormFieldCustom(
-                    onChanged: (_) => checkForm(context),
+                    onChanged: (_) => checkAddEventButton(context),
                     labelText: StringConstants.eventDescription,
                     textEditingController: descriptionController,
                     hintText: StringConstants.addEventDescriptionHintText,
@@ -111,7 +117,8 @@ class _AddEventState extends State<AddEvent> {
                                   pickedTime.minute,
                                 );
                               });
-                              checkForm(context);
+                              checkAddEventButton(context);
+                              checkEndDateButton(context);
                             }
                           }
                         },
@@ -134,24 +141,28 @@ class _AddEventState extends State<AddEvent> {
                     children: [
                       CustomButton(
                         text: StringConstants.addEventEndDate,
-                        onPressed: () async {
-                          final pickedDate = await _selectDate(context);
-                          if (pickedDate != null) {
-                            final pickedTime = await _selectTime(context);
-                            if (pickedTime != null) {
-                              setState(() {
-                                endDate = DateTime(
-                                  pickedDate.year,
-                                  pickedDate.month,
-                                  pickedDate.day,
-                                  pickedTime.hour,
-                                  pickedTime.minute,
-                                );
-                              });
-                              checkForm(context);
-                            }
-                          }
-                        },
+                        filled: isEndDateButtonEnabled,
+                        onPressed: isEndDateButtonEnabled
+                            ? () async {
+                                final pickedDate = await _selectDate(context);
+                                if (pickedDate != null) {
+                                  final pickedTime = await _selectTime(context,
+                                      pickedDate: pickedDate, isEndDate: true);
+                                  if (pickedTime != null) {
+                                    setState(() {
+                                      endDate = DateTime(
+                                        pickedDate.year,
+                                        pickedDate.month,
+                                        pickedDate.day,
+                                        pickedTime.hour,
+                                        pickedTime.minute,
+                                      );
+                                    });
+                                    checkAddEventButton(context);
+                                  }
+                                }
+                              }
+                            : null,
                       ),
                       if (endDate != null)
                         Padding(
@@ -191,20 +202,44 @@ class _AddEventState extends State<AddEvent> {
   Future<DateTime?> _selectDate(BuildContext context) async {
     return await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
+      initialDate: startDate ?? DateTime.now(),
+      firstDate: startDate ?? DateTime.now(),
       lastDate: DateTime(2100),
     );
   }
 
-  Future<TimeOfDay?> _selectTime(BuildContext context) async {
-    return await showTimePicker(
+  Future<TimeOfDay?> _selectTime(BuildContext context,
+      {DateTime? pickedDate = null, bool isEndDate = false}) async {
+    final initialTime = TimeOfDay.now();
+    final selectedTime = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: initialTime,
     );
+
+    if (selectedTime == null) return null;
+
+    if (isEndDate && startDate != null && pickedDate != null) {
+      final selectedDateTime = DateTime(
+        pickedDate!.year,
+        pickedDate!.month,
+        pickedDate!.day,
+        selectedTime.hour,
+        selectedTime.minute,
+      );
+
+      if (startDate!.isAfter(selectedDateTime)) {
+        context
+            .read<AddEventCubit>()
+            .showErrorDialog(StringConstants.invalidEndTime);
+
+        return null;
+      }
+    }
+
+    return selectedTime;
   }
 
-  void checkForm(BuildContext context) {
+  void checkAddEventButton(BuildContext context) {
     final isFormValid = titleController.text.isNotEmpty &&
         descriptionController.text.isNotEmpty &&
         startDate != null &&
@@ -214,6 +249,14 @@ class _AddEventState extends State<AddEvent> {
       context.read<AddEventCubit>().unlockAdd();
     } else {
       context.read<AddEventCubit>().lockAdd();
+    }
+  }
+
+  void checkEndDateButton(BuildContext context) {
+    if (startDate != null) {
+      context.read<AddEventCubit>().unlockEndDate();
+    } else {
+      context.read<AddEventCubit>().lockEndDate();
     }
   }
 }

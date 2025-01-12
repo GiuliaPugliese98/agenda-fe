@@ -74,6 +74,7 @@ class StringConstants {
 
   //Calendar
   static const String noData = "No data available";
+  static const String invalidEndTime = "The end time must be later than the start time for the same day";
 
   //Add Event
   static const String addEvent = "Add Event";
@@ -98,4 +99,7 @@ class StringConstants {
   static const String emptyNotes = "No notes are present for this event";
   static const String startDate = "Start Date";
   static const String endDate = "End Date";
+  static const String addNote = "Add note";
+  static const String eventDeleted = "Event deleted successfully";
+  static const String eventDeletedNotFound = "Event deleted not found!";
 }

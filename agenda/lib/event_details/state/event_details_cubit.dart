@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../core/costants/string_constants.dart';
 import '../../core/data/models/user_model/user_model.dart';
 import '../../core/data/repository/event_repository.dart';
+import '../../core/network/api_client.dart';
 import '../../core/ui/app_routes/routes.dart';
 import '../../core/ui/app_routes/routes_constants.dart';
 import 'event_details_state.dart';
@@ -16,7 +17,8 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
   late bool createdByLoggedUser;
   final EventRepository eventRepository = Get.find<EventRepository>();
 
-  EventDetailsCubit(Map<String, dynamic> arguments) : super(EventDetailsInit()) {
+  EventDetailsCubit(Map<String, dynamic> arguments)
+      : super(EventDetailsInit()) {
     event = arguments[StringConstants.eventDetailsKey];
     createdByLoggedUser = event.createdByLoggedUser;
     loadEventDetails(arguments);
@@ -26,19 +28,28 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
     emit(EventDetailsLoading());
     try {
       final user = await Get.find<UserRepository>().getUser();
-      emit(EventDetailsLoaded(event: event, user: user, createdByLoggedUser: createdByLoggedUser));
+      emit(EventDetailsLoaded(
+          event: event, user: user, createdByLoggedUser: createdByLoggedUser));
     } catch (e) {
       emit(EventDetailsError(message: e.toString()));
     }
   }
 
-  void deleteEvent(String eventId) async {
-    emit(EventDetailsLoading());
-    try {
-      await eventRepository.deleteEvent(eventId);
-      emit(EventDetailsSuccess(message: "Event deleted successfully"));
-    } catch (e) {
-      emit(EventDetailsError(message: e.toString()));
+  void deleteEvent(String eventUuid) async {
+    final currentState = state;
+    if (currentState is EventDetailsLoaded) {
+      try {
+        emit(EventDetailsLoading());
+        await eventRepository.deleteEvent(eventUuid);
+        emit(EventDetailsSuccess(message: StringConstants.eventDeleted));
+        AppRoutes.pushNamed(Routes.calendar);
+      } on InternalServerErrorException {
+        emit(EventDetailsError(message: StringConstants.eventDeletedNotFound));
+      } on NotFoundException {
+        emit(EventDetailsError(message: StringConstants.eventDeletedNotFound));
+      } catch (e) {
+        emit(EventDetailsError(message: e.toString()));
+      }
     }
   }
 

@@ -78,7 +78,7 @@ class Calendar extends StatelessWidget {
                 return Container(
                   margin: EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.tabBarUnselected),
+                    border: Border.all(color: AppColors.unselected),
                     color: isToday
                         ? AppColors.secondaryColor
                         : AppColors.backgroundColor,
@@ -134,7 +134,7 @@ class Calendar extends StatelessWidget {
                                         : AppColors.backgroundColor,
                                     borderRadius: BorderRadius.circular(4),
                                     border: Border.all(
-                                        color: AppColors.tabBarUnselected),
+                                        color: AppColors.unselected),
                                   ),
                                   child: Text(
                                     event.title,

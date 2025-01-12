@@ -23,6 +23,14 @@ class AddEventCubit extends BaseCubit<AddEventState> {
     emit(AddEventLockAdd());
   }
 
+  void unlockEndDate() {
+    emit(EndDateUnlock());
+  }
+
+  void lockEndDate() {
+    emit(EndDateLock());
+  }
+
   void setButtonState(bool isEnabled) {
     if (isEnabled) {
       unlockAdd();
@@ -47,7 +55,7 @@ class AddEventCubit extends BaseCubit<AddEventState> {
     try {
       await eventRepository.createEvent(newEvent);
       emit(AddEventSuccess("Event added successfully"));
-      Get.back(result: true);
+      AppRoutes.pushNamed(Routes.calendar);
     } on InternalServerErrorException {
       emit(AddEventError("Failed to add event"));
     } catch (e) {
@@ -56,7 +64,6 @@ class AddEventCubit extends BaseCubit<AddEventState> {
   }
 
   Future<void> showErrorDialog(String message) async {
-    AppRoutes.pushNamed(Routes.calendar);
     showAlertError(message);
   }
 
