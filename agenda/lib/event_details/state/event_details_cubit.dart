@@ -13,12 +13,12 @@ import 'event_details_state.dart';
 class EventDetailsCubit extends BaseCubit<EventDetailsState> {
   late EventModel event;
   late UserModel user;
-  late bool isUserEvent;
+  late bool createdByLoggedUser;
   final EventRepository eventRepository = Get.find<EventRepository>();
 
   EventDetailsCubit(Map<String, dynamic> arguments) : super(EventDetailsInit()) {
     event = arguments[StringConstants.eventDetailsKey];
-    isUserEvent = arguments[StringConstants.isUserEventKey];
+    createdByLoggedUser = arguments[StringConstants.createdByLoggedUserKey];
     loadEventDetails(arguments);
   }
 
@@ -26,7 +26,7 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
     emit(EventDetailsLoading());
     try {
       final user = await Get.find<UserRepository>().getUser();
-      emit(EventDetailsLoaded(event: event, user: user, isUserEvent: isUserEvent));
+      emit(EventDetailsLoaded(event: event, user: user, createdByLoggedUser: createdByLoggedUser));
     } catch (e) {
       emit(EventDetailsError(message: e.toString()));
     }

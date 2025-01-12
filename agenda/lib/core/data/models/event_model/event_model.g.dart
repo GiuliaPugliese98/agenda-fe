@@ -20,7 +20,7 @@ EventModel _$EventModelFromJson(Map<String, dynamic> json) => EventModel(
       attachments: (json['attachments'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      isUserEvent: json['isUserEvent'] as bool? ?? false,
+      createdByLoggedUser: json['createdByLoggedUser'] as bool,
     );
 
 Map<String, dynamic> _$EventModelToJson(EventModel instance) =>
@@ -33,5 +33,5 @@ Map<String, dynamic> _$EventModelToJson(EventModel instance) =>
       'participantsEmails': instance.participantsEmails,
       'notes': instance.notes,
       'attachments': instance.attachments,
-      'isUserEvent': instance.isUserEvent,
+      'createdByLoggedUser': instance.createdByLoggedUser,
     };

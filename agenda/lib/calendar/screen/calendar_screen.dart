@@ -123,7 +123,7 @@ class Calendar extends StatelessWidget {
                                       arguments: {
                                         StringConstants.eventDetailsKey:
                                             eventsForDay[eventIndex],
-                                        StringConstants.isUserEventKey: eventsForDay[eventIndex].isUserEvent
+                                        StringConstants.createdByLoggedUserKey: eventsForDay[eventIndex].createdByLoggedUser
                                       });
                                 },
                                 child: Container(
@@ -131,7 +131,7 @@ class Calendar extends StatelessWidget {
                                       vertical: 2, horizontal: 4),
                                   padding: EdgeInsets.all(4),
                                   decoration: BoxDecoration(
-                                    color: event.isUserEvent
+                                    color: event.createdByLoggedUser
                                         ? AppColors.mainColor.withOpacity(0.1)
                                         : AppColors.backgroundColor,
                                     borderRadius: BorderRadius.circular(4),

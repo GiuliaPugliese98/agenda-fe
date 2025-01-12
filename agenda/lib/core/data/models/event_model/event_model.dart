@@ -9,7 +9,7 @@ class EventModel extends EventModelToAdd {
   final List<String>? participantsEmails;
   final List<String>? notes;
   final List<String>? attachments;
-  final bool isUserEvent;
+  final bool createdByLoggedUser;
 
   EventModel({
     required super.title,
@@ -20,7 +20,7 @@ class EventModel extends EventModelToAdd {
     required this.participantsEmails,
     required this.notes,
     required this.attachments,
-    this.isUserEvent = false
+    required this.createdByLoggedUser
   });
 
   factory EventModel.fromJson(Map<String, dynamic> json) => _$EventModelFromJson(json);

@@ -18,9 +18,9 @@ class EventDetailsLoading extends EventDetailsState {
 class EventDetailsLoaded extends EventDetailsState {
   final EventModel event;
   final UserModel user;
-  final bool isUserEvent;
+  final bool createdByLoggedUser;
 
-  EventDetailsLoaded({required this.event, required this.user, required this.isUserEvent});
+  EventDetailsLoaded({required this.event, required this.user, required this.createdByLoggedUser});
 }
 
 class EventDetailsError extends EventDetailsState {

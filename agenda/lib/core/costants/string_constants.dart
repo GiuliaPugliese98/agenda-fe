@@ -87,7 +87,7 @@ class StringConstants {
 
   //Event Details
   static const String eventDetailsKey = "eventDetailsKey";
-  static const String isUserEventKey = "isUserEventKey";
+  static const String createdByLoggedUserKey = "isUserEventKey";
   static const String eventDetailsTitle = "Event Details";
   static const String deleteEvent = "Delete Event";
   static const String editEvent = "Edit Event";

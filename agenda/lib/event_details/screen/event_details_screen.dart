@@ -17,7 +17,7 @@ import '../state/event_details_state.dart';
 class EventDetails extends StatelessWidget {
   late final EventModel event;
   late final UserModel user;
-  late final bool isCreator;
+  late final bool createdByLoggedUser;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
@@ -44,10 +44,10 @@ class EventDetails extends StatelessWidget {
   Widget _buildEventDetails(BuildContext context, EventDetailsLoaded state) {
     event = state.event;
     user = state.user;
-    isCreator = state.isUserEvent;
+    createdByLoggedUser = state.createdByLoggedUser;
     titleController.text = event.title;
     descriptionController.text = event.description;
-    if (isCreator) {
+    if (createdByLoggedUser) {
       return _buildCreatorView(context);
     } else {
       return _buildParticipantView(context);
@@ -112,9 +112,6 @@ class EventDetails extends StatelessWidget {
 
   Widget _buildEventDetailsParticipantWidget(BuildContext context) {
     final cubit = context.read<EventDetailsCubit>();
-    debugPrint("Event: $event");
-    debugPrint("User: $user");
-    debugPrint("isCreator: $isCreator");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
