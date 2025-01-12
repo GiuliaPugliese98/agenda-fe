@@ -1,11 +1,16 @@
 # Usa un'immagine Node.js per costruire il progetto Flutter
 FROM node:16 AS build
 
-# Installa Flutter
+# Installa Flutter 3.22.2
 RUN apt-get update && apt-get install -y wget unzip && \
-    wget https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.13.5-stable.tar.xz && \
-    tar -xf flutter_linux_3.13.5-stable.tar.xz -C /usr/local && \
-    export PATH="$PATH:/usr/local/flutter/bin" && flutter doctor
+    wget https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.22.2-stable.tar.xz && \
+    tar -xf flutter_linux_3.22.2-stable.tar.xz -C /usr/local && \
+    echo 'export PATH=$PATH:/usr/local/flutter/bin' >> /etc/profile && \
+    . /etc/profile && \
+    flutter doctor
+
+# Imposta il PATH per Flutter
+ENV PATH="/usr/local/flutter/bin:${PATH}"
 
 # Copia i file del progetto
 WORKDIR /app
