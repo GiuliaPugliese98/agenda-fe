@@ -35,6 +35,7 @@ jobs:
     - name: Build Flutter Web
       run: |
         export PATH="$PATH:$PWD/flutter/bin"
+        cd agenda
         flutter build web --release
 
     # Login a Docker Hub
