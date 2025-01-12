@@ -48,7 +48,7 @@ jobs:
 
     # Build dell'immagine Docker
     - name: Build Docker image
-      run: docker build -t giuliapugliese/agenda-frontend:latest .
+      run: docker build -t giuliapugliese/agenda-frontend:latest -f agenda/Dockerfile ./agenda
 
     # Push dell'immagine Docker su Docker Hub
     - name: Push Docker image to Docker Hub
