@@ -1,3 +1,4 @@
+import 'package:agenda/core/costants/string_constants.dart';
 import 'package:get/get.dart';
 
 import '../../core/bloc/base_cubit.dart';
@@ -54,10 +55,10 @@ class AddEventCubit extends BaseCubit<AddEventState> {
     emit(AddEventLoading());
     try {
       await eventRepository.createEvent(newEvent);
-      emit(AddEventSuccess("Event added successfully"));
+      emit(AddEventSuccess(StringConstants.addEventSuccess));
       AppRoutes.pushNamed(Routes.calendar);
     } on InternalServerErrorException {
-      emit(AddEventError("Failed to add event"));
+      emit(AddEventError(StringConstants.addEventError));
     } catch (e) {
       emit(AddEventError(e.toString()));
     }
@@ -70,6 +71,6 @@ class AddEventCubit extends BaseCubit<AddEventState> {
   Future<void> showSuccessDialog(String message) async {
     AppRoutes.pushNamed(Routes.calendar);
     showAlertSuccess(
-        "Success", message, "OK");
+        StringConstants.success, message, StringConstants.ok);
   }
 }

@@ -57,7 +57,7 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
     emit(EventDetailsLoading());
     try {
       await eventRepository.registerToEvent(eventId);
-      emit(EventDetailsSuccess(message: "Registered successfully"));
+      emit(EventDetailsSuccess(message: StringConstants.eventRegistrationSuccessful));
     } catch (e) {
       emit(EventDetailsError(message: e.toString()));
     }
@@ -67,7 +67,7 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
     emit(EventDetailsLoading());
     try {
       await eventRepository.unregisterFromEvent(eventId);
-      emit(EventDetailsSuccess(message: "Unregistered successfully"));
+      emit(EventDetailsSuccess(message: StringConstants.eventUnregistrationSuccessful));
     } catch (e) {
       emit(EventDetailsError(message: e.toString()));
     }

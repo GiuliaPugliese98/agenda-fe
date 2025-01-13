@@ -85,6 +85,8 @@ class StringConstants {
   static const String addEventSave = "Save Event";
   static const String addEventTitleHintText = "Add your event title";
   static const String addEventDescriptionHintText = "Add your event description";
+  static const String addEventSuccess = "Event added successfully";
+  static const String addEventError = "Failed to add event";
 
   //Event Details
   static const String eventDetailsKey = "eventDetailsKey";
@@ -102,4 +104,9 @@ class StringConstants {
   static const String addNote = "Add note";
   static const String eventDeleted = "Event deleted successfully";
   static const String eventDeletedNotFound = "Event deleted not found!";
+  static const String eventRegistrationSuccessful = "Registered successfully";
+  static const String eventUnregistrationSuccessful = "Unregistered successfully";
+
+  //Generic
+  static const String success = "Success";
 }
