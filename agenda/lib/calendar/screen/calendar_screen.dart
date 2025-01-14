@@ -121,7 +121,7 @@ class Calendar extends StatelessWidget {
                                   AppRoutes.pushNamed(Routes.eventDetail,
                                       arguments: {
                                         StringConstants.eventDetailsKey:
-                                            eventsForDay[eventIndex]
+                                            eventsForDay[eventIndex].uuid
                                       });
                                 },
                                 child: Container(

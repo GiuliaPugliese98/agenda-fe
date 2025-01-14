@@ -106,7 +106,12 @@ class StringConstants {
   static const String eventDeletedNotFound = "Event deleted not found!";
   static const String eventRegistrationSuccessful = "Registered successfully";
   static const String eventUnregistrationSuccessful = "Unregistered successfully";
+  static const String eventAddNote = "Unregistered successfully";
+  static const String note = "Note";
+  static const String noteHintText = "Enter your note here";
 
   //Generic
   static const String success = "Success";
+  static const String save = "Save";
+  static const String cancel = "Cancel";
 }

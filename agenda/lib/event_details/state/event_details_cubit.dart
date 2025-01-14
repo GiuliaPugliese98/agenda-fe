@@ -19,8 +19,6 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
 
   EventDetailsCubit(Map<String, dynamic> arguments)
       : super(EventDetailsInit()) {
-    event = arguments[StringConstants.eventDetailsKey];
-    createdByLoggedUser = event.createdByLoggedUser;
     loadEventDetails(arguments);
   }
 
@@ -28,6 +26,9 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
     emit(EventDetailsLoading());
     try {
       final user = await Get.find<UserRepository>().getUser();
+      String eventUuid = arguments[StringConstants.eventDetailsKey];
+      event = await eventRepository.getEventByUuid(eventUuid);
+      createdByLoggedUser = event.createdByLoggedUser;
       emit(EventDetailsLoaded(
           event: event, user: user, createdByLoggedUser: createdByLoggedUser));
     } catch (e) {
@@ -82,4 +83,16 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
     showAlertSuccess(
         StringConstants.success_title, message, StringConstants.ok);
   }
+
+  void addNoteToEvent(String eventUuid, String note) async {
+    emit(EventDetailsLoading());
+    try {
+      await eventRepository.addNoteToEvent(event.uuid, note);
+      event = await eventRepository.getEventByUuid(event.uuid);
+      emit(EventDetailsLoaded(event: event, user: user, createdByLoggedUser: createdByLoggedUser));
+    } catch (e) {
+      emit(EventDetailsError(message: "Failed to add note: ${e.toString()}"));
+    }
+  }
+
 }

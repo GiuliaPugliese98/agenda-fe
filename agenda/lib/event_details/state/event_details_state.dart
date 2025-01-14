@@ -31,6 +31,6 @@ class EventDetailsError extends EventDetailsState {
 
 class EventDetailsSuccess extends EventDetailsState {
   final String message;
-
+  
   EventDetailsSuccess({required this.message});
 }

@@ -5,8 +5,10 @@ import 'package:get/get.dart';
 import '../../core/base_widgets/base_widget.dart';
 import '../../core/costants/string_constants.dart';
 import '../../core/data/models/event_model/event_model.dart';
+import '../../core/enums/form_field_custom_type_enum.dart';
 import '../../core/enums/text_style_custom_enum.dart';
 import '../../core/ui/widgets/custom_button/custom_button.dart';
+import '../../core/ui/widgets/text_form_custom/screen/text_form_custom_screen.dart';
 import '../../core/ui/widgets/text_label_custom.dart';
 import '../../core/ui/theme/app_colors.dart';
 import '../state/event_details_cubit.dart';
@@ -17,6 +19,7 @@ class EventDetails extends StatelessWidget {
   late final EventModel event;
   late final UserModel user;
   late final bool createdByLoggedUser;
+  bool isSaveNoteEnabled = false;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
@@ -59,9 +62,9 @@ class EventDetails extends StatelessWidget {
     titleController.text = event.title;
     descriptionController.text = event.description;
     return SingleChildScrollView(
-          child: createdByLoggedUser
-              ? buildCreatorView(context)
-              : buildParticipantView(context),
+      child: createdByLoggedUser
+          ? buildCreatorView(context)
+          : buildParticipantView(context),
     );
   }
 
@@ -153,7 +156,7 @@ class EventDetails extends StatelessWidget {
       SizedBox(height: MediaQuery.of(context).size.height * 0.05),
       CustomButton(
         onPressed: () {
-          //TODO add note
+          showAddNoteDialog(context, context.read<EventDetailsCubit>());
         },
         text: StringConstants.addNote,
         fillColor: AppColors.secondaryColor,
@@ -172,5 +175,62 @@ class EventDetails extends StatelessWidget {
                 : 'th';
 
     return '$day$suffix ${DateFormat('MMMM yyyy HH:mm').format(date)}';
+  }
+
+  Future showAddNoteDialog(BuildContext context, EventDetailsCubit cubit) {
+    final TextEditingController noteController = TextEditingController();
+
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // Deve usare i bottoni per chiudere
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            void checkSaveNoteButton() {
+              setState(() {
+                isSaveNoteEnabled = noteController.text.isNotEmpty;
+              });
+            }
+            return AlertDialog(
+              title: const Text(StringConstants.addNote),
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormFieldCustom(
+                      labelText: StringConstants.note,
+                      formFieldType: FormFieldCustomTypeEnum.text,
+                      hintText: StringConstants.noteHintText,
+                      textEditingController: noteController,
+                      onChanged: (_) => checkSaveNoteButton(),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                    CustomButton(
+                      filled: isSaveNoteEnabled,
+                      text: StringConstants.save,
+                      onPressed: isSaveNoteEnabled
+                          ? () {
+                        cubit.addNoteToEvent(event.uuid, noteController.text);
+                        Navigator.of(context).pop();
+                      }
+                          : null,
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                    CustomButton(
+                      text: StringConstants.cancel,
+                      textColor: AppColors.mainColor,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }
