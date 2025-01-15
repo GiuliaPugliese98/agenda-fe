@@ -37,6 +37,7 @@ class Calendar extends StatelessWidget {
     final firstDayOfWeek =
         DateTime(state.currentMonth.year, state.currentMonth.month, 1).weekday;
     final today = DateTime.now();
+    final daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     return BaseWidget(
       navBarTitle:
           "Calendar - ${DateFormat('MMMM yyyy').format(state.currentMonth)}",
@@ -57,10 +58,29 @@ class Calendar extends StatelessWidget {
       ],
       body: Column(
         children: [
+          // Riga dei giorni della settimana
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: daysOfWeek
+                .map(
+                  (day) => Expanded(
+                    child: Center(
+                      child: Text(
+                        day,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
           Expanded(
             child: GridView.builder(
               gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7),
+                  const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7, mainAxisSpacing: 5, mainAxisExtent: 140),
               itemCount: daysInMonth + firstDayOfWeek - 1,
               itemBuilder: (context, index) {
                 if (index < firstDayOfWeek - 1) {
@@ -76,9 +96,10 @@ class Calendar extends StatelessWidget {
                     .where((event) => isSameDay(event.startDate, date))
                     .toList();
                 return Container(
-                  margin: EdgeInsets.all(4),
+                  margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.unselected),
+                    borderRadius: BorderRadius.circular(25),
                     color: isToday
                         ? AppColors.secondaryColor
                         : AppColors.backgroundColor,
@@ -88,23 +109,13 @@ class Calendar extends StatelessWidget {
                     children: [
                       Column(
                         children: [
+                          const SizedBox(height: 8),
                           Text(
                             "$day",
                             style: TextStyle(
                               fontWeight:
                                   isToday ? FontWeight.bold : FontWeight.normal,
                               fontSize: 16,
-                            ),
-                          ),
-                          Text(
-                            DateFormat('EEEE').format(date),
-                            style: TextStyle(
-                              fontWeight:
-                                  isToday ? FontWeight.bold : FontWeight.normal,
-                              fontSize: 14,
-                              color: isToday
-                                  ? AppColors.mainColor
-                                  : AppColors.blackText,
                             ),
                           ),
                         ],
@@ -132,7 +143,7 @@ class Calendar extends StatelessWidget {
                                     color: event.createdByLoggedUser
                                         ? AppColors.mainColor
                                         : AppColors.backgroundColor,
-                                    borderRadius: BorderRadius.circular(4),
+                                    borderRadius: BorderRadius.circular(5),
                                     border:
                                         Border.all(color: AppColors.unselected),
                                   ),
