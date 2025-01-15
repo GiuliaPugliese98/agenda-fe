@@ -54,21 +54,23 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
     }
   }
 
-  void registerToEvent(String eventId) async {
+  void registerToEvent(String eventUuid) async {
     emit(EventDetailsLoading());
     try {
-      await eventRepository.registerToEvent(eventId);
-      emit(EventDetailsSuccess(message: StringConstants.eventRegistrationSuccessful));
+      await eventRepository.registerToEvent(eventUuid);
+      emit(EventDetailsSuccess(
+          message: StringConstants.eventRegistrationSuccessful));
     } catch (e) {
       emit(EventDetailsError(message: e.toString()));
     }
   }
 
-  void unregisterFromEvent(String eventId) async {
+  void unregisterFromEvent(String eventUuid) async {
     emit(EventDetailsLoading());
     try {
-      await eventRepository.unregisterFromEvent(eventId);
-      emit(EventDetailsSuccess(message: StringConstants.eventUnregistrationSuccessful));
+      await eventRepository.unregisterFromEvent(eventUuid);
+      emit(EventDetailsSuccess(
+          message: StringConstants.eventUnregistrationSuccessful));
     } catch (e) {
       emit(EventDetailsError(message: e.toString()));
     }
@@ -80,6 +82,7 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
   }
 
   Future<void> showSuccessDialog(String message) async {
+    AppRoutes.pushNamed(Routes.calendar);
     showAlertSuccess(
         StringConstants.success_title, message, StringConstants.ok);
   }
@@ -89,10 +92,17 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
     try {
       await eventRepository.addNoteToEvent(event.uuid, note);
       event = await eventRepository.getEventByUuid(event.uuid);
-      emit(EventDetailsLoaded(event: event, user: user, createdByLoggedUser: createdByLoggedUser));
+      showAlertSuccess(
+        StringConstants.success_title,
+        "Note added successfully",
+        StringConstants.ok,
+        callbackConfirmButton: () {
+          AppRoutes.pushNamed(Routes.eventDetail,
+              arguments: {StringConstants.eventDetailsKey: event.uuid});
+        },
+      );
     } catch (e) {
       emit(EventDetailsError(message: "Failed to add note: ${e.toString()}"));
     }
   }
-
 }

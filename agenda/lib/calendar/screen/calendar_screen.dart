@@ -130,18 +130,20 @@ class Calendar extends StatelessWidget {
                                   padding: EdgeInsets.all(4),
                                   decoration: BoxDecoration(
                                     color: event.createdByLoggedUser
-                                        ? AppColors.mainColor.withOpacity(0.1)
+                                        ? AppColors.mainColor
                                         : AppColors.backgroundColor,
                                     borderRadius: BorderRadius.circular(4),
-                                    border: Border.all(
-                                        color: AppColors.unselected),
+                                    border:
+                                        Border.all(color: AppColors.unselected),
                                   ),
                                   child: Text(
                                     event.title,
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal,
-                                      color: AppColors.blackText,
+                                      color: event.createdByLoggedUser
+                                          ? AppColors.backgroundColor
+                                          : AppColors.blackText,
                                     ),
                                     overflow: TextOverflow
                                         .ellipsis, // Mi serve per tagliare il testo se troppo lungo

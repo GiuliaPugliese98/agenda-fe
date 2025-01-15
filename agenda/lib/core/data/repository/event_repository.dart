@@ -2,7 +2,6 @@ import '../../network/api_client.dart';
 import '../../repository/base_repository.dart';
 import '../models/event_model/event_model.dart';
 import '../models/event_model_to_add/event_model_to_add.dart';
-import '../models/note_model/note_model.dart';
 
 class EventRepository extends BaseRepository {
   EventRepository(ApiClient apiClient) : super(apiClient);
@@ -29,12 +28,12 @@ class EventRepository extends BaseRepository {
     await apiClient.delete('events/$eventUuid', {});
   }
 
-  Future<void> registerToEvent(String eventId) async {
-    await apiClient.post('participants/subscribe/$eventId', {});
+  Future<void> registerToEvent(String eventUuid) async {
+    await apiClient.post('participants/subscribe/$eventUuid', {});
   }
 
-  Future<void> unregisterFromEvent(String eventId) async {
-    await apiClient.delete('participants/unscribe/$eventId', {});
+  Future<void> unregisterFromEvent(String eventUuid) async {
+    await apiClient.delete('participants/unscribe/$eventUuid', {});
   }
 
   Future<void> addNoteToEvent(String eventUuid, String noteContent) async {

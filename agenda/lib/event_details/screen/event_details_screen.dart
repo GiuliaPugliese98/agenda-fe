@@ -48,7 +48,7 @@ class EventDetails extends StatelessWidget {
                     isBackGestureEnabled: true,
                     body: Scaffold(body: _buildEventDetails(context, state)));
               } else {
-                return const Center(child: Text(StringConstants.noData));
+                return const Center(child: CircularProgressIndicator());
               }
             },
           ),
@@ -79,7 +79,8 @@ class EventDetails extends StatelessWidget {
             context.read<EventDetailsCubit>().deleteEvent(event.uuid);
           },
           text: StringConstants.deleteEvent,
-          fillColor: AppColors.secondaryColor,
+          filled: false,
+          textColor: AppColors.mainColor,
         ),
       ],
     ).paddingAll(16.0);
@@ -94,17 +95,20 @@ class EventDetails extends StatelessWidget {
         SizedBox(height: MediaQuery.of(context).size.height * 0.03),
         event.safeParticipantsEmails!.contains(user.email)
             ? CustomButton(
-                text: StringConstants.unregisterFromEvent,
                 onPressed: () {
                   cubit.unregisterFromEvent(event.uuid);
                 },
-                fillColor: AppColors.mainColor,
+                text: StringConstants.unregisterFromEvent,
+                filled: false,
+                textColor: AppColors.mainColor,
               )
             : CustomButton(
-                text: StringConstants.registerToEvent,
                 onPressed: () {
                   cubit.registerToEvent(event.uuid);
                 },
+                text: StringConstants.registerToEvent,
+                filled: false,
+                textColor: AppColors.mainColor,
               ),
       ],
     ).paddingAll(16.0);
@@ -191,6 +195,7 @@ class EventDetails extends StatelessWidget {
                 isSaveNoteEnabled = noteController.text.isNotEmpty;
               });
             }
+
             return AlertDialog(
               title: const Text(StringConstants.addNote),
               content: SingleChildScrollView(
@@ -211,14 +216,16 @@ class EventDetails extends StatelessWidget {
                       text: StringConstants.save,
                       onPressed: isSaveNoteEnabled
                           ? () {
-                        cubit.addNoteToEvent(event.uuid, noteController.text);
-                        Navigator.of(context).pop();
-                      }
+                              cubit.addNoteToEvent(
+                                  event.uuid, noteController.text);
+                              Navigator.of(context).pop();
+                            }
                           : null,
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                     CustomButton(
                       text: StringConstants.cancel,
+                      filled: false,
                       textColor: AppColors.mainColor,
                       onPressed: () {
                         Navigator.of(context).pop();
