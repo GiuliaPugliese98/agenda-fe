@@ -2,7 +2,6 @@ import "package:agenda/add_event/screen/add_event_screen.dart";
 import "package:agenda/add_event/state/add_event_cubit.dart";
 import "package:agenda/calendar/screen/calendar_screen.dart";
 import "package:agenda/calendar/state/calendar_cubit.dart";
-import "package:agenda/core/data/models/event_model/event_model.dart";
 import "package:agenda/core/ui/app_routes/routes_constants.dart";
 import "package:agenda/event_details/screen/event_details_screen.dart";
 import "package:agenda/event_details/state/event_details_cubit.dart";
@@ -18,7 +17,6 @@ import "../../../registration/screen/registration_screen.dart";
 import "../../../registration/state/registration_cubit.dart";
 import "../../../splash/ui/screen/splash_screen.dart";
 import "../../../splash/ui/state/splash_cubit.dart";
-import "../../costants/string_constants.dart";
 import "../../data/repository/user_repository.dart";
 import "../widgets/alert_dialog/cubit/alert_dialog_cubit.dart";
 import "../widgets/thank_you_page/state/thank_you_page_cubit.dart";
@@ -28,6 +26,21 @@ class AppRoutes {
       GlobalKey(debugLabel: 'AppRoutes');
 
   static Route? generateRoute(RouteSettings settings) {
+    final uri = Uri.parse(settings.name!);
+
+    // Gestione dinamica per i percorsi come /event/{uuid}
+    if (uri.pathSegments.isNotEmpty && uri.pathSegments.first == 'event') {
+      final uuid = uri.pathSegments.length > 1 ? uri.pathSegments[1] : null;
+      if (uuid != null) {
+        return _buildRoute(
+          BlocProvider(
+            create: (_) => EventDetailsCubit(uuid),
+            child: EventDetails(uuid),
+          ),
+          settings,
+        );
+      }
+    }
     switch (settings.name) {
       case Routes.splash:
         return _buildRoute(
@@ -78,14 +91,6 @@ class AppRoutes {
           ),
           settings,
         );
-        case Routes.eventDetail:
-        return _buildRoute(
-          BlocProvider(
-            create: (_) => EventDetailsCubit(Get.arguments),
-            child: EventDetails(),
-          ),
-          settings,
-        );
       default:
         return null;
     }
@@ -98,9 +103,9 @@ class AppRoutes {
     );
   }
 
-  static Future<T?> pushNamed<T>(String route, {Object? arguments}) async {
-    return await navigatorKey.currentState!
-        .pushNamed(route, arguments: arguments);
+  static Future<T?> pushNamed<T>(String route, {Object? arguments, String? dynamicSegment}) async {
+    String finalRoute = dynamicSegment != null ? '$route/$dynamicSegment' : route;
+    return await navigatorKey.currentState!.pushNamed(finalRoute, arguments: arguments);
   }
 
   static Future<T?> showThankYouPage<T>(Widget child) async {

@@ -16,6 +16,7 @@ import '../state/event_details_state.dart';
 import 'package:intl/intl.dart';
 
 class EventDetails extends StatelessWidget {
+  final String eventUuid;
   late final EventModel event;
   late final UserModel user;
   late final bool createdByLoggedUser;
@@ -23,10 +24,12 @@ class EventDetails extends StatelessWidget {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
+  EventDetails(this.eventUuid, {super.key}){}
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => EventDetailsCubit(Get.arguments),
+        create: (context) => EventDetailsCubit(eventUuid),
         child: BlocListener<EventDetailsCubit, EventDetailsState>(
           listener: (context, state) {
             if (state is EventDetailsSuccess) {
@@ -46,7 +49,7 @@ class EventDetails extends StatelessWidget {
                     navBarTitle: StringConstants.eventDetailsTitle,
                     withOutNavigationBar: false,
                     isBackGestureEnabled: true,
-                    body: Scaffold(body: _buildEventDetails(context, state)));
+                    body: Scaffold(body: buildEventDetails(context, state)));
               } else {
                 return const Center(child: CircularProgressIndicator());
               }
@@ -55,7 +58,7 @@ class EventDetails extends StatelessWidget {
         ));
   }
 
-  Widget _buildEventDetails(BuildContext context, EventDetailsLoaded state) {
+  Widget buildEventDetails(BuildContext context, EventDetailsLoaded state) {
     event = state.event;
     user = state.user;
     createdByLoggedUser = state.createdByLoggedUser;
