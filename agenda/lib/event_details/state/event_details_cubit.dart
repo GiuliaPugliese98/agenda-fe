@@ -7,14 +7,13 @@ import '../../core/costants/string_constants.dart';
 import '../../core/data/models/user_model/user_model.dart';
 import '../../core/data/repository/event_repository.dart';
 import '../../core/network/api_client.dart';
+import '../../core/ui/app_routes/route_aware_mixin.dart';
 import '../../core/ui/app_routes/routes.dart';
 import '../../core/ui/app_routes/routes_constants.dart';
+import '../screen/event_details_screen.dart';
 import 'event_details_state.dart';
 
-class EventDetailsCubit extends BaseCubit<EventDetailsState> {
-  late EventModel event;
-  late UserModel user;
-  late bool createdByLoggedUser;
+class EventDetailsCubit extends BaseCubit<EventDetailsState>{
   final EventRepository eventRepository = Get.find<EventRepository>();
 
   EventDetailsCubit(String eventUuid)
@@ -26,8 +25,8 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
     emit(EventDetailsLoading());
     try {
       final user = await Get.find<UserRepository>().getUser();
-      event = await eventRepository.getEventByUuid(eventUuid);
-      createdByLoggedUser = event.createdByLoggedUser;
+      EventModel event = await eventRepository.getEventByUuid(eventUuid);
+      bool createdByLoggedUser = event.createdByLoggedUser;
       emit(EventDetailsLoaded(
           event: event, user: user, createdByLoggedUser: createdByLoggedUser));
     } catch (e) {
@@ -89,15 +88,11 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
   void addNoteToEvent(String eventUuid, String note) async {
     emit(EventDetailsLoading());
     try {
-      await eventRepository.addNoteToEvent(event.uuid, note);
-      event = await eventRepository.getEventByUuid(event.uuid);
+      await eventRepository.addNoteToEvent(eventUuid, note);
       showAlertSuccess(
         StringConstants.success_title,
         "Note added successfully",
-        StringConstants.ok,
-        callbackConfirmButton: () {
-          AppRoutes.pushNamed("${Routes.eventDetail}/${event.uuid}");
-        }
+        StringConstants.ok
       );
     } catch (e) {
       emit(EventDetailsError(message: "Failed to add note: ${e.toString()}"));

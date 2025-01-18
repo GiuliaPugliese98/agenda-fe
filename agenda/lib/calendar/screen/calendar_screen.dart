@@ -11,6 +11,7 @@ import '../state/calendar_cubit.dart';
 import '../state/calendar_state.dart';
 
 class Calendar extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -45,13 +46,13 @@ class Calendar extends StatelessWidget {
       isBackGestureEnabled: true,
       actions: [
         IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => context
               .read<CalendarCubit>()
               .goToPreviousMonth(state.currentMonth),
         ),
         IconButton(
-          icon: Icon(Icons.arrow_forward),
+          icon: const Icon(Icons.arrow_forward),
           onPressed: () =>
               context.read<CalendarCubit>().goToNextMonth(state.currentMonth),
         ),

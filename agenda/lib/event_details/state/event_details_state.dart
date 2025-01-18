@@ -1,9 +1,12 @@
 import 'package:agenda/core/bloc/base_state.dart';
+import 'package:agenda/event_details/screen/event_details_screen.dart';
 
 import '../../core/data/models/event_model/event_model.dart';
 import '../../core/data/models/user_model/user_model.dart';
+import '../../core/ui/app_routes/route_aware_mixin.dart';
 
-abstract class EventDetailsState extends BaseState{}
+abstract class EventDetailsState extends BaseState {
+}
 
 class EventDetailsInit extends EventDetailsState {
   @override
@@ -20,7 +23,10 @@ class EventDetailsLoaded extends EventDetailsState {
   final UserModel user;
   final bool createdByLoggedUser;
 
-  EventDetailsLoaded({required this.event, required this.user, required this.createdByLoggedUser});
+  EventDetailsLoaded(
+      {required this.event,
+      required this.user,
+      required this.createdByLoggedUser});
 }
 
 class EventDetailsError extends EventDetailsState {
@@ -31,6 +37,6 @@ class EventDetailsError extends EventDetailsState {
 
 class EventDetailsSuccess extends EventDetailsState {
   final String message;
-  
+
   EventDetailsSuccess({required this.message});
 }
