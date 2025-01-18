@@ -16,17 +16,16 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
   late UserModel user;
   late bool createdByLoggedUser;
   final EventRepository eventRepository = Get.find<EventRepository>();
+  final UserRepository userRepository = Get.find<UserRepository>();
 
-  EventDetailsCubit(Map<String, dynamic> arguments)
-      : super(EventDetailsInit()) {
-    loadEventDetails(arguments);
+  EventDetailsCubit(String uuid) : super(EventDetailsInit()) {
+    loadEventDetails(uuid);
   }
 
-  void loadEventDetails(Map<String, dynamic> arguments) async {
+  void loadEventDetails(String eventUuid) async {
     emit(EventDetailsLoading());
     try {
-      final user = await Get.find<UserRepository>().getUser();
-      String eventUuid = arguments[StringConstants.eventDetailsKey];
+      final user = await userRepository.getUser();
       event = await eventRepository.getEventByUuid(eventUuid);
       createdByLoggedUser = event.createdByLoggedUser;
       emit(EventDetailsLoaded(
@@ -97,8 +96,10 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
         "Note added successfully",
         StringConstants.ok,
         callbackConfirmButton: () {
-          AppRoutes.pushNamed(Routes.eventDetail,
-              arguments: {StringConstants.eventDetailsKey: event.uuid});
+          AppRoutes.pushNamed(
+            Routes.eventDetail,
+            pathParameters: {'uuid': event.uuid},
+          );
         },
       );
     } catch (e) {

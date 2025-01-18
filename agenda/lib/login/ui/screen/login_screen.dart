@@ -37,9 +37,7 @@ class Login extends StatelessWidget {
           } else if (state is LoginSuccess) {
             final userController = Get.find<UserController>();
             userController.setUser(state.user);
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              AppRoutes.pushNamed(Routes.calendar);
-            });
+            AppRoutes.pushNamed(Routes.calendar);
           } else if (state is LoginLockSignIn) {
             isLoginButtonEnable = false;
           } else if (state is LoginUnlockSignIn) {

@@ -22,10 +22,12 @@ class SplashCubit extends BaseCubit<SplashState> {
         UserModel user = await userRepository.getUser();
         userController.setUser(user);
 
-        if (Get.currentRoute == Routes.login || Get.currentRoute == Routes.splash ) {
+        if (AppRoutes.router.location == Routes.login ||
+            AppRoutes.router.location == Routes.splash) {
           AppRoutes.pushNamed(Routes.calendar);
         }
-      } else {
+      } else if (AppRoutes.router.location == Routes.splash ||
+          AppRoutes.router.location.isEmpty) {
         AppRoutes.pushNamed(Routes.preLogin);
       }
     } catch (e) {

@@ -1,106 +1,106 @@
-import "package:agenda/add_event/screen/add_event_screen.dart";
-import "package:agenda/add_event/state/add_event_cubit.dart";
-import "package:agenda/calendar/screen/calendar_screen.dart";
-import "package:agenda/calendar/state/calendar_cubit.dart";
-import "package:agenda/core/data/models/event_model/event_model.dart";
-import "package:agenda/core/ui/app_routes/routes_constants.dart";
-import "package:agenda/event_details/screen/event_details_screen.dart";
-import "package:agenda/event_details/state/event_details_cubit.dart";
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
-import "package:get/get.dart";
-import "package:get/get_core/src/get_main.dart";
-import "../../../login/ui/screen/login_screen.dart";
-import "../../../login/ui/state/login_cubit.dart";
-import "../../../pre_login/screen/pre_login_screen.dart";
-import "../../../pre_login/state/pre_login_cubit.dart";
-import "../../../registration/screen/registration_screen.dart";
-import "../../../registration/state/registration_cubit.dart";
-import "../../../splash/ui/screen/splash_screen.dart";
-import "../../../splash/ui/state/splash_cubit.dart";
-import "../../costants/string_constants.dart";
-import "../../data/repository/user_repository.dart";
-import "../widgets/alert_dialog/cubit/alert_dialog_cubit.dart";
-import "../widgets/thank_you_page/state/thank_you_page_cubit.dart";
+import 'package:agenda/core/ui/app_routes/routes_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:agenda/splash/ui/screen/splash_screen.dart';
+import 'package:agenda/pre_login/screen/pre_login_screen.dart';
+import 'package:agenda/login/ui/screen/login_screen.dart';
+import 'package:agenda/registration/screen/registration_screen.dart';
+import 'package:agenda/calendar/screen/calendar_screen.dart';
+import 'package:agenda/add_event/screen/add_event_screen.dart';
+import 'package:agenda/event_details/screen/event_details_screen.dart';
+import 'package:agenda/event_details/state/event_details_cubit.dart';
+import 'package:agenda/splash/ui/state/splash_cubit.dart';
+import 'package:agenda/pre_login/state/pre_login_cubit.dart';
+import 'package:agenda/login/ui/state/login_cubit.dart';
+import 'package:agenda/registration/state/registration_cubit.dart';
+import 'package:agenda/calendar/state/calendar_cubit.dart';
+import 'package:agenda/add_event/state/add_event_cubit.dart';
+import 'package:get/get.dart';
+import '../widgets/alert_dialog/cubit/alert_dialog_cubit.dart';
+import '../widgets/thank_you_page/state/thank_you_page_cubit.dart';
 
 class AppRoutes {
   static GlobalKey<NavigatorState> navigatorKey =
       GlobalKey(debugLabel: 'AppRoutes');
 
-  static Route? generateRoute(RouteSettings settings) {
-    switch (settings.name) {
-      case Routes.splash:
-        return _buildRoute(
-          BlocProvider(
-            create: (_) => SplashCubit(),
-            child: SplashPage(),
-          ),
-          settings,
-        );
-      case Routes.preLogin:
-        return _buildRoute(
-          BlocProvider(
-            create: (_) => PreLoginCubit(),
-            child: PreLogin(),
-          ),
-          settings,
-        );
-      case Routes.login:
-        return _buildRoute(
-          BlocProvider(
-            create: (_) => LoginCubit(),
-            child: Login(),
-          ),
-          settings,
-        );
-      case Routes.registration:
-        return _buildRoute(
-          BlocProvider(
+  static GoRouter router = GoRouter(
+    navigatorKey: navigatorKey,
+    initialLocation: Routes.splash,
+    routes: [
+      GoRoute(
+        name: Routes.splash,
+        path: Routes.splash,
+        builder: (context, state) => BlocProvider(
+          create: (_) => SplashCubit(),
+          child: SplashPage(),
+        ),
+      ),
+      GoRoute(
+        name: Routes.preLogin,
+        path: Routes.preLogin,
+        builder: (context, state) => BlocProvider(
+          create: (_) => PreLoginCubit(),
+          child: PreLogin(),
+        ),
+      ),
+      GoRoute(
+        name: Routes.login,
+        path: Routes.login,
+        builder: (context, state) => BlocProvider(
+          create: (_) => LoginCubit(),
+          child: Login(),
+        ),
+      ),
+      GoRoute(
+        name: Routes.registration,
+        path: Routes.registration,
+        builder: (context, state) {
+          final args = state.extra as Map<String, dynamic>?;
+          return BlocProvider(
             create: (_) =>
-                RegistrationCubit(Get.find<UserRepository>(), Get.arguments),
+                RegistrationCubit(args?['repository'], args?['arguments']),
             child: Registration(),
-          ),
-          settings,
-        );
-      case Routes.calendar:
-        return _buildRoute(
-          BlocProvider(
-            create: (_) => CalendarCubit(),
-            child: Calendar(),
-          ),
-          settings,
-        );
-      case Routes.addEvent:
-        return _buildRoute(
-          BlocProvider(
-            create: (_) => AddEventCubit(),
-            child: AddEvent(),
-          ),
-          settings,
-        );
-        case Routes.eventDetail:
-        return _buildRoute(
-          BlocProvider(
-            create: (_) => EventDetailsCubit(Get.arguments),
-            child: EventDetails(),
-          ),
-          settings,
-        );
-      default:
-        return null;
+          );
+        },
+      ),
+      GoRoute(
+        name: Routes.calendar,
+        path: Routes.calendar,
+        builder: (context, state) => BlocProvider(
+          create: (_) => CalendarCubit(),
+          child: Calendar(),
+        ),
+      ),
+      GoRoute(
+        name: Routes.addEvent,
+        path: Routes.addEvent,
+        builder: (context, state) => BlocProvider(
+          create: (_) => AddEventCubit(),
+          child: AddEvent(),
+        ),
+      ),
+      GoRoute(
+        name: Routes.eventDetail,
+        path: '${Routes.eventDetail}/:uuid',
+        builder: (context, state) {
+          String? uuid = state.pathParameters['uuid'];
+          return BlocProvider(
+            create: (_) => EventDetailsCubit(uuid!),
+            child: EventDetails(uuid!),
+          );
+        },
+      ),
+    ],
+  );
+
+  static void pushNamed(String route,
+      {Map<String, String>? pathParameters}) {
+    if (pathParameters != null) {
+      router.pushNamed(route, pathParameters: pathParameters);
+    } else {
+      router.pushNamed(route);
     }
-  }
-
-  static Route _buildRoute(Widget child, RouteSettings settings) {
-    return MaterialPageRoute(
-      settings: settings,
-      builder: (BuildContext context) => child,
-    );
-  }
-
-  static Future<T?> pushNamed<T>(String route, {Object? arguments}) async {
-    return await navigatorKey.currentState!
-        .pushNamed(route, arguments: arguments);
   }
 
   static Future<T?> showThankYouPage<T>(Widget child) async {

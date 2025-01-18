@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 import 'core/ui/app_routes/routes.dart';
 import 'dependency_injection.dart';
 import 'login/ui/user_controller.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 void main() {
   initDependencies(); // Inizializza le dipendenze
   Get.put(UserController()); // Inizializza il controller utente
+  setUrlStrategy(PathUrlStrategy());
   runApp(const MyApp());
 }
 
@@ -14,13 +16,12 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MaterialApp.router(
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
         cardColor: Colors.white,
       ),
-      navigatorKey: AppRoutes.navigatorKey,
-      onGenerateRoute: AppRoutes.generateRoute,
+      routerConfig: AppRoutes.router,
     );
   }
 }

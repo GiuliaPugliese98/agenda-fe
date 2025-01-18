@@ -79,8 +79,8 @@ class Calendar extends StatelessWidget {
           ),
           Expanded(
             child: GridView.builder(
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7, mainAxisSpacing: 5, mainAxisExtent: 140),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 7, mainAxisSpacing: 5, mainAxisExtent: 140),
               itemCount: daysInMonth + firstDayOfWeek - 1,
               itemBuilder: (context, index) {
                 if (index < firstDayOfWeek - 1) {
@@ -129,11 +129,10 @@ class Calendar extends StatelessWidget {
                             final event = eventsForDay[eventIndex];
                             return GestureDetector(
                                 onTap: () {
-                                  AppRoutes.pushNamed(Routes.eventDetail,
-                                      arguments: {
-                                        StringConstants.eventDetailsKey:
-                                            eventsForDay[eventIndex].uuid
-                                      });
+                                  AppRoutes.pushNamed(
+                                    Routes.eventDetail,
+                                    pathParameters: {'uuid': event.uuid},
+                                  );
                                 },
                                 child: Container(
                                   margin: EdgeInsets.symmetric(
