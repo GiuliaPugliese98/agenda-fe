@@ -47,9 +47,11 @@ class _AddEventState extends State<AddEvent> {
           } else if (state is EndDateLock) {
             isEndDateButtonEnabled = false;
           } else if (state is AddEventSuccess) {
-            context.read<AddEventCubit>().showSuccessDialog(state.message);
+            context.read<AddEventCubit>().showSuccessDialog(context, state.message);
           } else if (state is AddEventError) {
-            context.read<AddEventCubit>().showErrorDialog(state.message);
+            context.read<AddEventCubit>().showErrorDialog(context, state.message);
+          } else if (state is InvalidEndDate) {
+            context.read<AddEventCubit>().showErrorDialog(context, state.message);
           }
         },
         child: BlocBuilder<AddEventCubit, AddEventState>(
@@ -230,7 +232,7 @@ class _AddEventState extends State<AddEvent> {
       if (startDate!.isAfter(selectedDateTime)) {
         context
             .read<AddEventCubit>()
-            .showErrorDialog(StringConstants.invalidEndTime);
+            .showErrorDialog(context, StringConstants.invalidEndTime);
 
         return null;
       }

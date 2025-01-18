@@ -42,24 +42,28 @@ class Registration extends StatelessWidget {
       child: BlocListener<RegistrationCubit, RegistrationState>(
         listener: (context, state) {
           if (state is RegistrationSuccess) {
-            AppRoutes.showThankYouPage(ThankYouPage(
-              model: ThankYouPageModel(
-                callbackIconBack: () {
-                  AppRoutes.popUntilPrelogin();
-                },
-                thankYouPageTitle:
-                    StringConstants.registrationThankYouPageTitle,
-                thankYouPageMessage:
-                    StringConstants.registrationThankYouPageMessage,
-                image: Assets.imagesAppLogo,
-                thankYouPageButton: StringConstants.loginButton,
-                callbackConfirm: () {
-                  AppRoutes.pushNamed(Routes.login);
-                },
-              ),
-            ));
+            AppRoutes.showThankYouPage(
+                context,
+                ThankYouPage(
+                  model: ThankYouPageModel(
+                    callbackIconBack: () {
+                      AppRoutes.popUntilPrelogin();
+                    },
+                    thankYouPageTitle:
+                        StringConstants.registrationThankYouPageTitle,
+                    thankYouPageMessage:
+                        StringConstants.registrationThankYouPageMessage,
+                    image: Assets.imagesAppLogo,
+                    thankYouPageButton: StringConstants.loginButton,
+                    callbackConfirm: () {
+                      AppRoutes.pushNamed(Routes.login);
+                    },
+                  ),
+                ));
           } else if (state is RegistrationFailure) {
-            context.read<RegistrationCubit>().showErrorDialog(state.error);
+            context
+                .read<RegistrationCubit>()
+                .showErrorDialog(context, state.error);
           } else if (state is RegistrationLockSignUp) {
             isRegistrationButtonEnable = false;
           } else if (state is RegistrationUnlockSignUp) {

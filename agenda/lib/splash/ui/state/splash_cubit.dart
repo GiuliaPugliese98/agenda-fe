@@ -24,7 +24,13 @@ class SplashCubit extends BaseCubit<SplashState> {
 
         if (AppRoutes.router.location == Routes.login ||
             AppRoutes.router.location == Routes.splash) {
-          AppRoutes.pushNamed(Routes.calendar);
+          DateTime currentDate = DateTime.now();
+          String month = currentDate.month.toString();
+          String year = currentDate.year.toString();
+          AppRoutes.pushNamed(
+            Routes.calendar,
+            pathParameters: {'month': month, 'year': year},
+          );
         }
       } else if (AppRoutes.router.location == Routes.splash ||
           AppRoutes.router.location.isEmpty) {

@@ -51,3 +51,11 @@ class EndDateUnlock extends AddEventState {
   @override
   List<Object> get props => [];
 }
+
+class InvalidEndDate extends AddEventState {
+  final String message;
+  InvalidEndDate(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

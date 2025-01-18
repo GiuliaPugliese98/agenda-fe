@@ -34,3 +34,9 @@ class EventDetailsSuccess extends EventDetailsState {
   
   EventDetailsSuccess({required this.message});
 }
+
+class EventDeleteSuccess extends EventDetailsState {
+  final String message;
+
+  EventDeleteSuccess({required this.message});
+}

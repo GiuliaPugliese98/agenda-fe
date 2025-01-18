@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import '../../../core/bloc/base_cubit.dart';
 import '../../../core/bloc/base_state.dart';
@@ -6,6 +7,8 @@ import '../../../core/data/models/user_credentials_model/user_credentials_model.
 import '../../../core/data/models/user_model/user_model.dart';
 import '../../../core/data/repository/user_repository.dart';
 import '../../../core/network/api_client.dart';
+import '../../../core/ui/app_routes/routes.dart';
+import '../../../core/ui/app_routes/routes_constants.dart';
 
 part 'login_state.dart';
 
@@ -37,13 +40,16 @@ class LoginCubit extends BaseCubit<LoginState> {
       UserModel user = await userRepository.getUser();
       emit(LoginSuccess(user: user));
     } on UnauthorizedException {
-      emit(LoginErrorUserNotAuthorized(error: StringConstants.loginUnauthorized));
+      emit(LoginErrorUserNotAuthorized(
+          error: StringConstants.loginUnauthorized));
     } catch (e) {
       emit(LoginError(error: e.toString()));
     }
   }
 
-  Future<void> showErrorDialog(String message) async {
-    showAlertError(message);
+  Future<void> showErrorDialog(BuildContext context, String message) async {
+    showAlertError(context, message, callbackConfirmButton: () {
+      AppRoutes.pushNamed(Routes.login);
+    });
   }
 }

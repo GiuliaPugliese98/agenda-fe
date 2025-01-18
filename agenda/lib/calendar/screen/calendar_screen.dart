@@ -11,10 +11,15 @@ import '../state/calendar_cubit.dart';
 import '../state/calendar_state.dart';
 
 class Calendar extends StatelessWidget {
+  final int month;
+  final int year;
+
+  Calendar(this.month, this.year, {super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => CalendarCubit(),
+      create: (_) => CalendarCubit(month, year),
       child: BlocBuilder<CalendarCubit, CalendarState>(
         builder: (context, state) {
           if (state is CalendarLoading) {

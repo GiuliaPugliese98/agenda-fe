@@ -7,6 +7,8 @@ import '../../core/costants/string_constants.dart';
 import '../../core/data/models/event_model/event_model.dart';
 import '../../core/enums/form_field_custom_type_enum.dart';
 import '../../core/enums/text_style_custom_enum.dart';
+import '../../core/ui/app_routes/routes.dart';
+import '../../core/ui/app_routes/routes_constants.dart';
 import '../../core/ui/widgets/custom_button/custom_button.dart';
 import '../../core/ui/widgets/text_form_custom/screen/text_form_custom_screen.dart';
 import '../../core/ui/widgets/text_label_custom.dart';
@@ -17,9 +19,6 @@ import 'package:intl/intl.dart';
 
 class EventDetails extends StatelessWidget {
   final String eventUuid;
-  late final EventModel event;
-  late final UserModel user;
-  late final bool createdByLoggedUser;
   bool isSaveNoteEnabled = false;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -35,9 +34,13 @@ class EventDetails extends StatelessWidget {
             if (state is EventDetailsSuccess) {
               context
                   .read<EventDetailsCubit>()
-                  .showSuccessDialog(state.message);
+                  .showSuccessDialog(context, state.message, eventUuid);
             } else if (state is EventDetailsError) {
-              context.read<EventDetailsCubit>().showErrorDialog(state.message);
+              context.read<EventDetailsCubit>().showErrorDialog(context, state.message, eventUuid);
+            } else if(state is EventDeleteSuccess){
+              context
+                  .read<EventDetailsCubit>()
+                  .showDeleteSuccessDialog(context, state.message);
             }
           },
           child: BlocBuilder<EventDetailsCubit, EventDetailsState>(
@@ -59,23 +62,23 @@ class EventDetails extends StatelessWidget {
   }
 
   Widget _buildEventDetails(BuildContext context, EventDetailsLoaded state) {
-    event = state.event;
-    user = state.user;
-    createdByLoggedUser = state.createdByLoggedUser;
+    EventModel event = state.event;
+    UserModel user = state.user;
+    bool createdByLoggedUser = state.createdByLoggedUser;
     titleController.text = event.title;
     descriptionController.text = event.description;
     return SingleChildScrollView(
       child: createdByLoggedUser
-          ? buildCreatorView(context)
-          : buildParticipantView(context),
+          ? buildCreatorView(context, event, user)
+          : buildParticipantView(context, event, user),
     );
   }
 
-  Widget buildCreatorView(BuildContext context) {
+  Widget buildCreatorView(BuildContext context, EventModel event, UserModel user) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ...buildEventDetailsContent(context),
+        ...buildEventDetailsContent(context, event),
         SizedBox(height: MediaQuery.of(context).size.height * 0.03),
         CustomButton(
           onPressed: () {
@@ -89,12 +92,12 @@ class EventDetails extends StatelessWidget {
     ).paddingAll(16.0);
   }
 
-  Widget buildParticipantView(BuildContext context) {
+  Widget buildParticipantView(BuildContext context, EventModel event, UserModel user) {
     final cubit = context.read<EventDetailsCubit>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ...buildEventDetailsContent(context),
+        ...buildEventDetailsContent(context, event),
         SizedBox(height: MediaQuery.of(context).size.height * 0.03),
         event.safeParticipantsEmails!.contains(user.email)
             ? CustomButton(
@@ -117,7 +120,7 @@ class EventDetails extends StatelessWidget {
     ).paddingAll(16.0);
   }
 
-  List<Widget> buildEventDetailsContent(BuildContext context) {
+  List<Widget> buildEventDetailsContent(BuildContext context, EventModel event) {
     return [
       TextLabelCustom(StringConstants.eventTitle,
           styleEnum: TextStyleCustomEnum.bold),
@@ -163,7 +166,7 @@ class EventDetails extends StatelessWidget {
       SizedBox(height: MediaQuery.of(context).size.height * 0.05),
       CustomButton(
         onPressed: () {
-          showAddNoteDialog(context, context.read<EventDetailsCubit>());
+          showAddNoteDialog(context, context.read<EventDetailsCubit>(), event.uuid);
         },
         text: StringConstants.addNote,
         fillColor: AppColors.secondaryColor,
@@ -184,7 +187,7 @@ class EventDetails extends StatelessWidget {
     return '$day$suffix ${DateFormat('MMMM yyyy HH:mm').format(date)}';
   }
 
-  Future showAddNoteDialog(BuildContext context, EventDetailsCubit cubit) {
+  Future showAddNoteDialog(BuildContext context, EventDetailsCubit cubit, String eventUuid) {
     final TextEditingController noteController = TextEditingController();
 
     return showDialog(
@@ -219,8 +222,8 @@ class EventDetails extends StatelessWidget {
                       text: StringConstants.save,
                       onPressed: isSaveNoteEnabled
                           ? () {
-                              cubit.addNoteToEvent(
-                                  event.uuid, noteController.text);
+                              cubit.addNoteToEvent(context,
+                                  eventUuid, noteController.text);
                               Navigator.of(context).pop();
                             }
                           : null,

@@ -1,6 +1,6 @@
 import 'package:agenda/core/costants/string_constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-
 import '../../core/bloc/base_cubit.dart';
 import '../../core/data/models/event_model_to_add/event_model_to_add.dart';
 import '../../core/data/repository/event_repository.dart';
@@ -47,16 +47,14 @@ class AddEventCubit extends BaseCubit<AddEventState> {
     required DateTime endDate,
   }) async {
     final newEvent = EventModelToAdd(
-      title: title,
-      description: description,
-      startDate: startDate,
-      endDate: endDate
-    );
+        title: title,
+        description: description,
+        startDate: startDate,
+        endDate: endDate);
     emit(AddEventLoading());
     try {
       await eventRepository.createEvent(newEvent);
       emit(AddEventSuccess(StringConstants.addEventSuccess));
-      AppRoutes.pushNamed(Routes.calendar);
     } on InternalServerErrorException {
       emit(AddEventError(StringConstants.addEventError));
     } catch (e) {
@@ -64,13 +62,27 @@ class AddEventCubit extends BaseCubit<AddEventState> {
     }
   }
 
-  Future<void> showErrorDialog(String message) async {
-    showAlertError(message);
+  Future<void> invalidEndDateTime(BuildContext context, String message) async {
+    emit(InvalidEndDate(StringConstants.invalidEndTime));
   }
 
-  Future<void> showSuccessDialog(String message) async {
-    AppRoutes.pushNamed(Routes.calendar);
+  Future<void> showErrorDialog(BuildContext context, String message) async {
+    showAlertError(context, message, callbackConfirmButton: () {
+      AppRoutes.pushNamed(Routes.addEvent);
+    });
+  }
+
+  Future<void> showSuccessDialog(BuildContext context, String message) async {
+    DateTime currentDate = DateTime.now();
+    String month = currentDate.month.toString();
+    String year = currentDate.year.toString();
     showAlertSuccess(
-        StringConstants.success, message, StringConstants.ok);
+        context, StringConstants.success, message, StringConstants.ok,
+        callbackConfirmButton: () {
+      AppRoutes.pushNamed(
+        Routes.calendar,
+        pathParameters: {'month': month, 'year': year},
+      );
+    });
   }
 }

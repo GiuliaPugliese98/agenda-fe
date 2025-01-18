@@ -37,15 +37,21 @@ class Login extends StatelessWidget {
           } else if (state is LoginSuccess) {
             final userController = Get.find<UserController>();
             userController.setUser(state.user);
-            AppRoutes.pushNamed(Routes.calendar);
+            DateTime currentDate = DateTime.now();
+            String month = currentDate.month.toString();
+            String year = currentDate.year.toString();
+            AppRoutes.pushNamed(
+              Routes.calendar,
+              pathParameters: {'month': month, 'year': year},
+            );
           } else if (state is LoginLockSignIn) {
             isLoginButtonEnable = false;
           } else if (state is LoginUnlockSignIn) {
             isLoginButtonEnable = true;
           } else if (state is LoginError) {
-            context.read<LoginCubit>().showErrorDialog(state.error);
+            context.read<LoginCubit>().showErrorDialog(context, state.error);
           } else if (state is LoginErrorUserNotAuthorized) {
-            context.read<LoginCubit>().showErrorDialog(state.error);
+            context.read<LoginCubit>().showErrorDialog(context, state.error);
           }
         }, child:
             BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
@@ -89,16 +95,19 @@ class Login extends StatelessWidget {
                       children: <Widget>[
                         TextFormFieldCustom(
                           onChanged: (isValid) =>
-                          {isValidFieldEmail = isValid, checkForm(context)},
+                              {isValidFieldEmail = isValid, checkForm(context)},
                           labelText: StringConstants.loginEmail,
                           formFieldType: FormFieldCustomTypeEnum.email,
                           textEditingController: emailController,
                           hintText: StringConstants.loginEmailHintText,
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.02),
                         TextFormFieldCustom(
-                          onChanged: (isValid) =>
-                          {isValidFieldPassword = isValid, checkForm(context)},
+                          onChanged: (isValid) => {
+                            isValidFieldPassword = isValid,
+                            checkForm(context)
+                          },
                           labelText: StringConstants.loginPassword,
                           formFieldType: FormFieldCustomTypeEnum.password,
                           textEditingController: passwordController,
@@ -113,10 +122,12 @@ class Login extends StatelessWidget {
                     filled: isLoginButtonEnable,
                     onPressed: isLoginButtonEnable
                         ? () {
-                      context.read<LoginCubit>().login(UserCredentialsModel(
-                          email: emailController.text.toString(),
-                          password: passwordController.text.toString()));
-                    }
+                            context.read<LoginCubit>().login(
+                                UserCredentialsModel(
+                                    email: emailController.text.toString(),
+                                    password:
+                                        passwordController.text.toString()));
+                          }
                         : null,
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.05),

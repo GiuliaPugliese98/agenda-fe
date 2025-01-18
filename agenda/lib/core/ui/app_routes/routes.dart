@@ -16,7 +16,6 @@ import 'package:agenda/login/ui/state/login_cubit.dart';
 import 'package:agenda/registration/state/registration_cubit.dart';
 import 'package:agenda/calendar/state/calendar_cubit.dart';
 import 'package:agenda/add_event/state/add_event_cubit.dart';
-import 'package:get/get.dart';
 import '../widgets/alert_dialog/cubit/alert_dialog_cubit.dart';
 import '../widgets/thank_you_page/state/thank_you_page_cubit.dart';
 
@@ -66,11 +65,15 @@ class AppRoutes {
       ),
       GoRoute(
         name: Routes.calendar,
-        path: Routes.calendar,
-        builder: (context, state) => BlocProvider(
-          create: (_) => CalendarCubit(),
-          child: Calendar(),
-        ),
+        path: '${Routes.calendar}/:month/:year',
+        builder: (context, state) {
+          int month = int.parse(state.pathParameters['month']!);
+          int year = int.parse(state.pathParameters['year']!);
+          return BlocProvider(
+            create: (_) => CalendarCubit(month, year),
+            child: Calendar(month, year),
+          );
+        },
       ),
       GoRoute(
         name: Routes.addEvent,
@@ -94,8 +97,7 @@ class AppRoutes {
     ],
   );
 
-  static void pushNamed(String route,
-      {Map<String, String>? pathParameters}) {
+  static void pushNamed(String route, {Map<String, String>? pathParameters}) {
     if (pathParameters != null) {
       router.pushNamed(route, pathParameters: pathParameters);
     } else {
@@ -103,17 +105,21 @@ class AppRoutes {
     }
   }
 
-  static Future<T?> showThankYouPage<T>(Widget child) async {
+  static Future<T?> showThankYouPage<T>(
+      BuildContext context, Widget child) async {
     WidgetsBinding.instance
-        .addPostFrameCallback((_) => showTYPOnBuildCompleted(child));
+        .addPostFrameCallback((_) => showTYPOnBuildCompleted(context, child));
   }
 
-  static Future<T?> showCustomDialog<T>(Widget child,
-      {bool enableBackButton = false}) async {
+  static Future<T?> showCustomDialog<T>(
+    BuildContext context,
+    Widget child, {
+    bool enableBackButton = false,
+  }) async {
     return await showDialog(
-      context: Get.context!,
+      context: context, // Usa il contesto passato come argomento
       barrierDismissible: false,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return BlocProvider(
           create: (_) => AlertDialogCubit(),
           child: PopScope(
@@ -131,9 +137,10 @@ class AppRoutes {
         .popUntil((route) => route.settings.name == destination);
   }
 
-  static Future showTYPOnBuildCompleted(Widget child) async {
+  static Future showTYPOnBuildCompleted(
+      BuildContext context, Widget child) async {
     return await showDialog(
-      context: Get.context!,
+      context: context,
       barrierColor: Colors.white,
       barrierDismissible: false,
       builder: (BuildContext context) {
@@ -145,8 +152,7 @@ class AppRoutes {
     );
   }
 
-  static Future popUntilPrelogin() async {
-    return await navigatorKey.currentState!
-        .pushNamedAndRemoveUntil(Routes.preLogin, (route) => false);
+  static Future<void> popUntilPrelogin() async {
+    router.go(Routes.preLogin);
   }
 }
