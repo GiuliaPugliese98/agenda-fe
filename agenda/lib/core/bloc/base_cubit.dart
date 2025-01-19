@@ -22,7 +22,7 @@ abstract class BaseCubit<S extends BaseState> extends Cubit<S> {
             message: message,
             callbackConfirm: callbackConfirmButton,
             callbackUndo: callbackUndoButton,
-            callbackBackButton: callbackBackButton,
+            callbackBack: callbackBackButton,
             showImage: showImageAlert,
             state: StateAlert.error));
   }
@@ -42,7 +42,7 @@ abstract class BaseCubit<S extends BaseState> extends Cubit<S> {
             state: StateAlert.success,
             callbackConfirm: callbackConfirmButton,
             callbackUndo: callbackUndoButton,
-            callbackBackButton: callbackConfirmButton,
+            callbackBack: callbackConfirmButton,
             showImage: showImageAlert));
   }
 }

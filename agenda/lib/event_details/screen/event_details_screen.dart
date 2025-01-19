@@ -7,8 +7,6 @@ import '../../core/costants/string_constants.dart';
 import '../../core/data/models/event_model/event_model.dart';
 import '../../core/enums/form_field_custom_type_enum.dart';
 import '../../core/enums/text_style_custom_enum.dart';
-import '../../core/ui/app_routes/routes.dart';
-import '../../core/ui/app_routes/routes_constants.dart';
 import '../../core/ui/widgets/custom_button/custom_button.dart';
 import '../../core/ui/widgets/text_form_custom/screen/text_form_custom_screen.dart';
 import '../../core/ui/widgets/text_label_custom.dart';

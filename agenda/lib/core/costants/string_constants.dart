@@ -56,6 +56,7 @@ class StringConstants {
   static const String alertDialogButtonHome = "Return to Home Page";
 
   static const String logout = "Logout";
+  static const String logoutMessage = "Do you really want to log out from your account?";
 
   //Validator
   static const String validatorMessageValidText = "Enter valid text";

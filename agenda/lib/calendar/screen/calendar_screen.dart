@@ -1,10 +1,12 @@
 import 'package:agenda/core/ui/app_routes/routes.dart';
 import 'package:agenda/core/ui/app_routes/routes_constants.dart';
+import 'package:agenda/core/ui/widgets/text_label_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../core/base_widgets/base_widget.dart';
 import '../../core/costants/string_constants.dart';
+import '../../core/enums/text_style_custom_enum.dart';
 import '../../core/ui/theme/app_colors.dart';
 import '../../core/ui/widgets/custom_button/custom_button.dart';
 import '../../generated/assets.dart';
@@ -76,9 +78,7 @@ class Calendar extends StatelessWidget {
             fit: BoxFit.contain,
             height: 25,
           ),
-          onPressed: () => context
-              .read<CalendarCubit>()
-              .logout(),
+          onPressed: () => showLogoutDialog(context, context.read<CalendarCubit>()),
         )
       ],
       body: Column(
@@ -212,5 +212,41 @@ class Calendar extends StatelessWidget {
     return date1.year == date2.year &&
         date1.month == date2.month &&
         date1.day == date2.day;
+  }
+
+  Future showLogoutDialog(BuildContext context, CalendarCubit cubit) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // Deve usare i bottoni per chiudere
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: TextLabelCustom(StringConstants.logoutMessage, align: TextAlign.center, styleEnum: TextStyleCustomEnum.bold),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                CustomButton(
+                    filled: true,
+                    text: StringConstants.logout,
+                    onPressed: () {
+                      cubit.logout();
+                    }),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                CustomButton(
+                  text: StringConstants.cancel,
+                  filled: false,
+                  textColor: AppColors.mainColor,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

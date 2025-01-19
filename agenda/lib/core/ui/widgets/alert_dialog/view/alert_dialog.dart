@@ -22,7 +22,7 @@ class AlertDialogPage extends StatelessWidget {
   final List<AlertDialogPageButton> buttons;
   final VoidCallback? callbackConfirm;
   final VoidCallback? callbackUndo;
-  final VoidCallback? callbackBackButton;
+  final VoidCallback? callbackBack;
 
   AlertDialogPage({
     Key? key,
@@ -33,7 +33,7 @@ class AlertDialogPage extends StatelessWidget {
     this.buttonTextConfirm = "",
     this.callbackConfirm,
     this.callbackUndo,
-    this.callbackBackButton,
+    this.callbackBack,
     this.showIconX = true,
     this.buttons = const [],
   }) : super(key: key);
@@ -49,7 +49,7 @@ class AlertDialogPage extends StatelessWidget {
         showImage,
         state,
         callbackConfirm,
-        callbackBackButton,
+        callbackBack,
         callbackUndo,
       ),
     );
@@ -117,7 +117,7 @@ class AlertDialogPage extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15.0),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black26,
                         blurRadius: 10.0,
@@ -135,7 +135,7 @@ class AlertDialogPage extends StatelessWidget {
                           child: IconButton(
                             iconSize: 24,
                             onPressed: callbackBackButton ?? () => Get.back(),
-                            icon: Icon(Icons.close),
+                            icon: const Icon(Icons.close),
                             color: AppColors.blackText,
                           ),
                         ),
