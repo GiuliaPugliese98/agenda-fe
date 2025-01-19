@@ -9,6 +9,7 @@ import 'calendar_state.dart';
 
 class CalendarCubit extends BaseCubit<CalendarState> {
   final EventRepository eventRepository = Get.find<EventRepository>();
+  final UserRepository userRepository = Get.find<UserRepository>();
 
   CalendarCubit(int month, int year) : super(CalendarInit()) {
     DateTime selectedDate = DateTime(year, month);
@@ -43,5 +44,10 @@ class CalendarCubit extends BaseCubit<CalendarState> {
       Routes.calendar,
       pathParameters: {'month': month, 'year': year},
     );
+  }
+
+  void logout() {
+    userRepository.logout();
+    AppRoutes.pushNamed(Routes.preLogin);
   }
 }

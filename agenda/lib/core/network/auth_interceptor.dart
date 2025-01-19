@@ -13,7 +13,8 @@ class AuthInterceptor extends Interceptor {
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
     final token = await authService.getToken();
-    if (token != null && !options.path.contains("auth")) {
+    if (token != null &&
+        (!options.path.contains("auth") || options.path.contains("logout"))) {
       options.headers['Authorization'] = 'Bearer $token';
     }
     handler.next(options);
@@ -22,7 +23,8 @@ class AuthInterceptor extends Interceptor {
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) async {
     try {
-      if (err.response?.statusCode == HttpStatus.unauthorized && !err.requestOptions.path.contains('login')) {
+      if (err.response?.statusCode == HttpStatus.unauthorized &&
+          !err.requestOptions.path.contains('login')) {
         final newToken = await authService.refreshToken();
         if (newToken != null) {
           err.requestOptions.headers['Authorization'] = 'Bearer $newToken';
@@ -40,14 +42,13 @@ class AuthInterceptor extends Interceptor {
         } else {
           AppRoutes.pushNamed(Routes.preLogin);
         }
-      } else if(err.response?.statusCode == HttpStatus.networkAuthenticationRequired && err.requestOptions.path.contains('refreshToken')) {
+      } else if (err.response?.statusCode == HttpStatus.forbidden) {
         AppRoutes.pushNamed(Routes.preLogin);
-      }
-      else{
+      } else {
         handler.next(err);
       }
     } catch (e) {
-        AppRoutes.pushNamed(Routes.preLogin);
+      AppRoutes.pushNamed(Routes.preLogin);
     }
   }
 }

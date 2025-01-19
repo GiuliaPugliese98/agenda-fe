@@ -7,6 +7,7 @@ import '../../core/base_widgets/base_widget.dart';
 import '../../core/costants/string_constants.dart';
 import '../../core/ui/theme/app_colors.dart';
 import '../../core/ui/widgets/custom_button/custom_button.dart';
+import '../../generated/assets.dart';
 import '../state/calendar_cubit.dart';
 import '../state/calendar_state.dart';
 
@@ -50,16 +51,35 @@ class Calendar extends StatelessWidget {
       isBackGestureEnabled: true,
       actions: [
         IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Image.asset(
+            Assets.imagesLeftArrow,
+            fit: BoxFit.contain,
+            height: 15,
+          ),
           onPressed: () => context
               .read<CalendarCubit>()
               .goToPreviousMonth(state.currentMonth),
         ),
         IconButton(
-          icon: Icon(Icons.arrow_forward),
+          icon: Image.asset(
+            Assets.imagesRightArrow,
+            fit: BoxFit.contain,
+            height: 15,
+          ),
           onPressed: () =>
               context.read<CalendarCubit>().goToNextMonth(state.currentMonth),
         ),
+        const Spacer(),
+        IconButton(
+          icon: Image.asset(
+            Assets.imagesLogout,
+            fit: BoxFit.contain,
+            height: 25,
+          ),
+          onPressed: () => context
+              .read<CalendarCubit>()
+              .logout(),
+        )
       ],
       body: Column(
         children: [
