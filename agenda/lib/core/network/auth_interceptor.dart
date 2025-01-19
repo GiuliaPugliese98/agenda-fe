@@ -27,6 +27,8 @@ class AuthInterceptor extends Interceptor {
           !err.requestOptions.path.contains('login')) {
         final newToken = await authService.refreshToken();
         if (newToken != null) {
+          authService.clearRefreshToken();
+          authService.clearToken();
           err.requestOptions.headers['Authorization'] = 'Bearer $newToken';
           final opts = Options(
             method: err.requestOptions.method,
