@@ -34,8 +34,10 @@ class EventDetails extends StatelessWidget {
                   .read<EventDetailsCubit>()
                   .showSuccessDialog(context, state.message, eventUuid);
             } else if (state is EventDetailsError) {
-              context.read<EventDetailsCubit>().showErrorDialog(context, state.message, eventUuid);
-            } else if(state is EventDeleteSuccess){
+              context
+                  .read<EventDetailsCubit>()
+                  .showErrorDialog(context, state.message, eventUuid);
+            } else if (state is EventDeleteSuccess) {
               context
                   .read<EventDetailsCubit>()
                   .showDeleteSuccessDialog(context, state.message);
@@ -47,7 +49,8 @@ class EventDetails extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               } else if (state is EventDetailsLoaded) {
                 return BaseWidget(
-                    navBarTitle: StringConstants.eventDetailsTitle,
+                    navBarTitle:
+                        "${StringConstants.eventDetailsTitle} - ${state.event.title}",
                     withOutNavigationBar: false,
                     isBackGestureEnabled: true,
                     body: Scaffold(body: _buildEventDetails(context, state)));
@@ -63,8 +66,6 @@ class EventDetails extends StatelessWidget {
     EventModel event = state.event;
     UserModel user = state.user;
     bool createdByLoggedUser = state.createdByLoggedUser;
-    titleController.text = event.title;
-    descriptionController.text = event.description;
     return SingleChildScrollView(
       child: createdByLoggedUser
           ? buildCreatorView(context, event, user)
@@ -72,103 +73,182 @@ class EventDetails extends StatelessWidget {
     );
   }
 
-  Widget buildCreatorView(BuildContext context, EventModel event, UserModel user) {
+  Widget buildCreatorView(
+      BuildContext context, EventModel event, UserModel user) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ...buildEventDetailsContent(context, event),
         SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-        CustomButton(
-          onPressed: () {
-            context.read<EventDetailsCubit>().deleteEvent(event.uuid);
-          },
-          text: StringConstants.deleteEvent,
-          filled: false,
-          textColor: AppColors.mainColor,
+        //button delete event
+        Center(
+          child: CustomButton(
+            onPressed: () {
+              context.read<EventDetailsCubit>().deleteEvent(event.uuid);
+            },
+            text: StringConstants.deleteEvent,
+            filled: false,
+            textColor: AppColors.mainColor,
+          ),
         ),
       ],
     ).paddingAll(16.0);
   }
 
-  Widget buildParticipantView(BuildContext context, EventModel event, UserModel user) {
+  Widget buildParticipantView(
+      BuildContext context, EventModel event, UserModel user) {
     final cubit = context.read<EventDetailsCubit>();
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ...buildEventDetailsContent(context, event),
         SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-        event.safeParticipantsEmails!.contains(user.email)
-            ? CustomButton(
-                onPressed: () {
-                  cubit.unregisterFromEvent(event.uuid);
-                },
-                text: StringConstants.unregisterFromEvent,
-                filled: false,
-                textColor: AppColors.mainColor,
-              )
-            : CustomButton(
-                onPressed: () {
-                  cubit.registerToEvent(event.uuid);
-                },
-                text: StringConstants.registerToEvent,
-                filled: false,
-                textColor: AppColors.mainColor,
-              ),
+        //button register/unregister
+        Center(
+          child: event.safeParticipantsEmails!.contains(user.email)
+              ? CustomButton(
+                  onPressed: () {
+                    cubit.unregisterFromEvent(event.uuid);
+                  },
+                  text: StringConstants.unregisterFromEvent,
+                  filled: false,
+                  textColor: AppColors.mainColor,
+                )
+              : CustomButton(
+                  onPressed: () {
+                    cubit.registerToEvent(event.uuid);
+                  },
+                  text: StringConstants.registerToEvent,
+                  filled: false,
+                  textColor: AppColors.mainColor,
+                ),
+        ),
       ],
     ).paddingAll(16.0);
   }
 
-  List<Widget> buildEventDetailsContent(BuildContext context, EventModel event) {
+  List<Widget> buildEventDetailsContent(
+      BuildContext context, EventModel event) {
     return [
-      TextLabelCustom(StringConstants.eventTitle,
-          styleEnum: TextStyleCustomEnum.bold),
-      TextLabelCustom(event.title, styleEnum: TextStyleCustomEnum.normal),
-      SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-      TextLabelCustom(StringConstants.eventDescription,
-          styleEnum: TextStyleCustomEnum.bold),
-      TextLabelCustom(event.description,
-          styleEnum: TextStyleCustomEnum.italicNormal),
-      SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-      TextLabelCustom(StringConstants.startDate,
-          styleEnum: TextStyleCustomEnum.bold),
-      TextLabelCustom(formatDateWithOrdinal(event.startDate),
-          styleEnum: TextStyleCustomEnum.italicNormal),
-      SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-      TextLabelCustom(StringConstants.endDate,
-          styleEnum: TextStyleCustomEnum.bold),
-      TextLabelCustom(formatDateWithOrdinal(event.endDate),
-          styleEnum: TextStyleCustomEnum.italicNormal),
-      SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-      TextLabelCustom(StringConstants.participants,
-          styleEnum: TextStyleCustomEnum.bold),
-      event.safeParticipantsEmails.isEmpty
-          ? TextLabelCustom(StringConstants.emptyParticipants)
-          : Column(
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          //dates, description and notes
+          Expanded(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              //dates
+              Row(
+                children: [
+                  Flexible(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          TextLabelCustom(StringConstants.startDate,
+                              styleEnum: TextStyleCustomEnum.bold),
+                          TextLabelCustom(formatDateWithOrdinal(event.startDate),
+                              styleEnum: TextStyleCustomEnum.italicNormal),
+                        ]),
+                  ),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+                  Flexible(
+                    child: Column(children: [
+                      TextLabelCustom(StringConstants.endDate,
+                          styleEnum: TextStyleCustomEnum.bold),
+                      TextLabelCustom(formatDateWithOrdinal(event.endDate),
+                          styleEnum: TextStyleCustomEnum.italicNormal),
+                    ]),
+                  )
+                ],
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+              TextLabelCustom(
+                StringConstants.eventDescription,
+                styleEnum: TextStyleCustomEnum.bold,
+              ),
+              //description
+              TextLabelCustom(event.description,
+                  styleEnum: TextStyleCustomEnum.italicNormal),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+              TextLabelCustom(StringConstants.notes,
+                  styleEnum: TextStyleCustomEnum.bold),
+                  //notes
+                  event.safeNotes.isEmpty
+                      ? TextLabelCustom(StringConstants.emptyNotes)
+                      : SizedBox(
+                    height: 150,
+                    child: ListView.builder(
+                      itemCount: event.safeNotes.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(vertical: 4.0),
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                            color: AppColors.backgroundColor,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: TextLabelCustom(
+                            event.safeNotes[index],
+                            align: TextAlign.start,
+                            styleEnum: TextStyleCustomEnum.normal,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ]),
+          ),
+          SizedBox(width: MediaQuery.of(context).size.width * 0.20),
+          //participants
+          Flexible(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ...event.safeParticipantsEmails
-                    .map((email) => TextLabelCustom(email))
+                TextLabelCustom(
+                  StringConstants.participants,
+                  styleEnum: TextStyleCustomEnum.bold,
+                ),
+                event.safeParticipantsEmails.isEmpty
+                    ? TextLabelCustom(StringConstants.emptyParticipants)
+                    : SizedBox(
+                  height: 150, // Altezza limitata per far scorrere i partecipanti
+                  child: ListView.builder(
+                    itemCount: event.safeParticipantsEmails.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(vertical: 4.0), // Spaziatura tra i riquadri
+                        padding: const EdgeInsets.all(8.0), // Spaziatura interna del riquadro
+                        decoration: BoxDecoration(
+                          color: AppColors.backgroundColor,
+                          borderRadius: BorderRadius.circular(8.0), // Angoli arrotondati
+                        ),
+                        child: TextLabelCustom(
+                          event.safeParticipantsEmails[index],
+                          align: TextAlign.start,
+                          styleEnum: TextStyleCustomEnum.normal,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               ],
             ),
-      SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-      TextLabelCustom(StringConstants.notes,
-          styleEnum: TextStyleCustomEnum.bold),
-      event.safeNotes.isEmpty
-          ? TextLabelCustom(StringConstants.emptyNotes)
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ...event.safeNotes.map((note) => TextLabelCustom(note))
-              ],
-            ),
-      SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-      CustomButton(
-        onPressed: () {
-          showAddNoteDialog(context, context.read<EventDetailsCubit>(), event.uuid);
-        },
-        text: StringConstants.addNote,
-        fillColor: AppColors.secondaryColor,
+          )
+        ],
       ),
+      //button Add note
+      SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+      Center(
+        child: CustomButton(
+          onPressed: () {
+            showAddNoteDialog(
+                context, context.read<EventDetailsCubit>(), event.uuid);
+          },
+          text: StringConstants.addNote,
+          fillColor: AppColors.secondaryColor,
+        ),
+      )
     ];
   }
 
@@ -185,7 +265,8 @@ class EventDetails extends StatelessWidget {
     return '$day$suffix ${DateFormat('MMMM yyyy HH:mm').format(date)}';
   }
 
-  Future showAddNoteDialog(BuildContext context, EventDetailsCubit cubit, String eventUuid) {
+  Future showAddNoteDialog(
+      BuildContext context, EventDetailsCubit cubit, String eventUuid) {
     final TextEditingController noteController = TextEditingController();
 
     return showDialog(
@@ -220,8 +301,8 @@ class EventDetails extends StatelessWidget {
                       text: StringConstants.save,
                       onPressed: isSaveNoteEnabled
                           ? () {
-                              cubit.addNoteToEvent(context,
-                                  eventUuid, noteController.text);
+                              cubit.addNoteToEvent(
+                                  context, eventUuid, noteController.text);
                               Navigator.of(context).pop();
                             }
                           : null,
