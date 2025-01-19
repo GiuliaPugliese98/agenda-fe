@@ -12,7 +12,10 @@ class AuthInterceptor extends Interceptor {
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    final token = await authService.getToken();
+    var token = await authService.getToken();
+    if (token == null || authService.tokenHasExpired(token)) {
+      token = await authService.loadAccessToken;
+    }
     if (token != null &&
         (!options.path.contains("auth") || options.path.contains("logout"))) {
       options.headers['Authorization'] = 'Bearer $token';
@@ -23,28 +26,7 @@ class AuthInterceptor extends Interceptor {
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) async {
     try {
-      if (err.response?.statusCode == HttpStatus.unauthorized &&
-          !err.requestOptions.path.contains('login')) {
-        final newToken = await authService.refreshToken();
-        if (newToken != null) {
-          authService.clearRefreshToken();
-          authService.clearToken();
-          err.requestOptions.headers['Authorization'] = 'Bearer $newToken';
-          final opts = Options(
-            method: err.requestOptions.method,
-            headers: err.requestOptions.headers,
-          );
-          final cloneReq = await Dio().request(
-            err.requestOptions.path,
-            options: opts,
-            data: err.requestOptions.data,
-            queryParameters: err.requestOptions.queryParameters,
-          );
-          handler.resolve(cloneReq);
-        } else {
-          AppRoutes.pushNamed(Routes.preLogin);
-        }
-      } else if (err.response?.statusCode == HttpStatus.forbidden) {
+      if (err.response?.statusCode == HttpStatus.forbidden) {
         AppRoutes.pushNamed(Routes.preLogin);
       } else {
         handler.next(err);

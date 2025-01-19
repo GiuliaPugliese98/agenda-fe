@@ -1,8 +1,7 @@
-import 'package:agenda/core/data/models/user_model/user_model.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../costants/string_constants.dart';
 import '../../network/api_client.dart';
 
 class AuthService {
@@ -76,5 +75,22 @@ class AuthService {
   Future<bool> isLoggedIn() async {
     final token = await getToken();
     return token != null;
+  }
+
+  bool tokenHasExpired(String? token) {
+    if (token == null) return true;
+    return JwtDecoder.isExpired(token);
+  }
+
+  Future<String?> get loadAccessToken async {
+    var accessToken = await getToken();
+    if (!tokenHasExpired(accessToken)) {
+      return accessToken;
+    }
+    final refreshTokenValue = await getRefreshToken();
+    if (!tokenHasExpired(refreshTokenValue)) {
+      return refreshToken();
+    }
+    return null;
   }
 }
