@@ -9,6 +9,8 @@ import '../../core/network/api_client.dart';
 import '../../core/ui/app_routes/routes.dart';
 import '../../core/ui/app_routes/routes_constants.dart';
 import 'event_details_state.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:typed_data';
 
 class EventDetailsCubit extends BaseCubit<EventDetailsState> {
   final EventRepository eventRepository = Get.find<EventRepository>();
@@ -67,6 +69,48 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
     }
   }
 
+  void uploadAttachment(String eventUuid) async {
+    emit(EventDetailsLoading());
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if (result != null) {
+        // Ottieni i dati del file come bytes
+        Uint8List? fileBytes = result.files.single.bytes;
+        String fileName = result.files.single.name;
+
+        // Passa i bytes e il nome file al repository
+        await eventRepository.uploadAttachment(eventUuid, fileBytes!, fileName);
+        loadEventDetails(eventUuid); // Ricarica i dettagli dell'evento
+        emit(EventDetailsSuccess(message: "File uploaded successfully"));
+      }
+    } catch (e) {
+      emit(EventDetailsError(message: "Failed to upload file: ${e.toString()}"));
+    }
+  }
+
+  void downloadAttachment(int attachmentId, String fileName) async {
+    emit(EventDetailsLoading());
+    try {
+      await eventRepository.downloadAttachment(attachmentId, fileName);
+      emit(EventDetailsSuccess(message: "File downloaded successfully"));
+    } catch (e) {
+      emit(EventDetailsError(message: "Failed to download file: ${e.toString()}"));
+    }
+  }
+
+  void addNoteToEvent(
+      BuildContext context, String eventUuid, String note) async {
+    emit(EventDetailsLoading());
+    try {
+      await eventRepository.addNoteToEvent(eventUuid, note);
+      emit(
+          EventDetailsSuccess(message: StringConstants.eventAddNoteSuccessful));
+    } catch (e) {
+      emit(EventDetailsError(message: "Failed to add note: ${e.toString()}"));
+    }
+  }
+
+
   Future<void> showErrorDialog(
       BuildContext context, String message, String uuid) async {
     showAlertError(context, message, callbackConfirmButton: (){
@@ -98,17 +142,5 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
         pathParameters: {'month': month, 'year': year},
       );
     }, StringConstants.success_title, message, StringConstants.ok);
-  }
-
-  void addNoteToEvent(
-      BuildContext context, String eventUuid, String note) async {
-    emit(EventDetailsLoading());
-    try {
-      await eventRepository.addNoteToEvent(eventUuid, note);
-      emit(
-          EventDetailsSuccess(message: StringConstants.eventAddNoteSuccessful));
-    } catch (e) {
-      emit(EventDetailsError(message: "Failed to add note: ${e.toString()}"));
-    }
   }
 }

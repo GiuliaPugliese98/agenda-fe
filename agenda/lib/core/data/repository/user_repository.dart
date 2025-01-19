@@ -39,6 +39,6 @@ class UserRepository extends BaseRepository {
 
   Future<UserModel> getUser() async {
     final response = await apiClient.get('users/');
-    return UserModel.fromJson(response);
+    return UserModel.fromJson(response.data);
   }
 }

@@ -1,6 +1,8 @@
 import 'package:agenda/core/data/models/event_model_to_add/event_model_to_add.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../attachment_model/attachment_model.dart';
+
 part 'event_model.g.dart';
 
 @JsonSerializable()
@@ -8,7 +10,7 @@ class EventModel extends EventModelToAdd {
   final String uuid;
   final List<String>? participantsEmails;
   final List<String>? notes;
-  final List<String>? attachments;
+  final List<AttachmentModel>? attachments;
   final bool createdByLoggedUser;
 
   EventModel({
@@ -30,4 +32,5 @@ class EventModel extends EventModelToAdd {
 
   List<String> get safeParticipantsEmails => participantsEmails ?? [];
   List<String> get safeNotes => notes ?? [];
+  List<AttachmentModel> get safeAttachments => attachments ?? [];
 }

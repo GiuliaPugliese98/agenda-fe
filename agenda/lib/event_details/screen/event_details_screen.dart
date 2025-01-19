@@ -1,3 +1,4 @@
+import 'package:agenda/calendar/state/calendar_cubit.dart';
 import 'package:agenda/core/data/models/user_model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -232,6 +233,45 @@ class EventDetails extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                // Sezione Attachments
+                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                TextLabelCustom(
+                  "Attachments",
+                  styleEnum: TextStyleCustomEnum.bold,
+                ),
+                CustomButton(
+                  onPressed: () {
+                    context.read<EventDetailsCubit>().uploadAttachment(event.uuid);
+                  },
+                  text: "Upload File",
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                if (event.safeAttachments.isNotEmpty)
+                  SizedBox(
+                    height: 150,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: event.safeAttachments.length,
+                      itemBuilder: (context, index) {
+                        final attachment = event.safeAttachments[index];
+                        return ListTile(
+                          title: TextLabelCustom(
+                            attachment.fileName,
+                            styleEnum: TextStyleCustomEnum.normal,
+                            align: TextAlign.start,
+                          ),
+                          onTap: () {
+                            context.read<EventDetailsCubit>().downloadAttachment(attachment.id, attachment.fileName);
+                          },
+                        );
+                      },
+                    ),
+                  )
+                else
+                  TextLabelCustom(
+                    "No attachments available.",
+                    styleEnum: TextStyleCustomEnum.italicNormal,
+                  ),
               ],
             ),
           )
