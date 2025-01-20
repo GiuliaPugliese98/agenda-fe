@@ -28,6 +28,9 @@ FROM nginx:stable
 # Copia i file generati dal build nel web server
 COPY --from=build /app/build/web /usr/share/nginx/html
 
+# Copia la configurazione personalizzata di Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Esponi la porta 80
 EXPOSE 80
 
