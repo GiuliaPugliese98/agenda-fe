@@ -11,7 +11,6 @@ import '../../../core/ui/app_routes/routes_constants.dart';
 import '../../../core/ui/widgets/custom_button/custom_button.dart';
 import '../../../core/ui/widgets/text_form_custom/screen/text_form_custom_screen.dart';
 import '../../../core/ui/widgets/text_label_custom.dart';
-import '../../../core/utils/handle_dismiss_keyboard.dart';
 import '../../../generated/assets.dart';
 import '../state/login_cubit.dart';
 import '../user_controller.dart';
@@ -26,7 +25,7 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HandleDismissKeyboard(child: _buildLogin(context));
+    return _buildLogin(context);
   }
 
   Widget _buildLogin(BuildContext context) {

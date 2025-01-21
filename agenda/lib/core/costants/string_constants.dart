@@ -115,4 +115,8 @@ class StringConstants {
   static const String success = "Success";
   static const String save = "Save";
   static const String cancel = "Cancel";
+
+  //WebSocket
+  static const String webSocketUrl = "http://localhost:8080/ws";
+  static const String webSocketDestination = "/topic/notifications";
 }

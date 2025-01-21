@@ -1,3 +1,6 @@
+import 'package:agenda/core/costants/string_constants.dart';
+
+import '../../manager/web_socket_manager.dart';
 import '../../network/api_client.dart';
 import '../../repository/base_repository.dart';
 import '../models/user_credentials_model/user_credentials_model.dart';
@@ -6,6 +9,7 @@ import '../services/auth_service.dart';
 
 class UserRepository extends BaseRepository {
   final AuthService authService;
+  final WebSocketManager webSocketManager = WebSocketManager();
 
   UserRepository(ApiClient apiClient, this.authService) : super(apiClient);
 
@@ -21,6 +25,9 @@ class UserRepository extends BaseRepository {
     if (response.containsKey('accessToken') && response.containsKey('token')) {
       await authService.saveToken(response['accessToken']);
       await authService.saveRefreshToken(response['token']);
+
+      openWebSocketConnection();
+
       return response['accessToken'];
     } else {
       throw Exception('Login failed');
@@ -28,17 +35,37 @@ class UserRepository extends BaseRepository {
   }
 
   Future<void> logout() async {
+    webSocketManager.disconnect();
     await apiClient.delete('auth/logout', {});
     await authService.clearToken();
     await authService.clearRefreshToken();
   }
 
   Future<bool> isLoggedIn() async {
-    return await authService.isLoggedIn();
+    var isLoggedIn = await authService.isLoggedIn();
+    if (isLoggedIn) {
+      openWebSocketConnection();
+    }
+    return isLoggedIn;
+  }
+
+  Future<String> getToken() async {
+    var token = await authService.getToken();
+    if (token != null) {
+      return token;
+    } else {
+      return "";
+    }
   }
 
   Future<UserModel> getUser() async {
     final response = await apiClient.get('users/');
     return UserModel.fromJson(response.data);
+  }
+
+  Future<void> openWebSocketConnection() async {
+    var token = await getToken();
+    // starts WebSocket
+    webSocketManager.connect(token, StringConstants.webSocketUrl);
   }
 }

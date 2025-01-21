@@ -13,7 +13,6 @@ import '../../core/ui/widgets/text_form_custom/screen/text_form_custom_screen.da
 import '../../core/ui/widgets/text_label_custom.dart';
 import '../../core/ui/widgets/thank_you_page/screen/thank_you_page.dart';
 import '../../core/ui/widgets/thank_you_page/thank_you_page_model.dart';
-import '../../core/utils/handle_dismiss_keyboard.dart';
 import '../../generated/assets.dart';
 import '../state/registration_cubit.dart';
 import '../state/registration_state.dart';
@@ -32,7 +31,7 @@ class Registration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HandleDismissKeyboard(child: _buildUserRegistration(context));
+    return _buildUserRegistration(context);
   }
 
   Widget _buildUserRegistration(BuildContext context) {

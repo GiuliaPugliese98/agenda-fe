@@ -8,7 +8,6 @@ import '../../core/enums/form_field_custom_type_enum.dart';
 import '../../core/ui/theme/app_colors.dart';
 import '../../core/ui/widgets/custom_button/custom_button.dart';
 import '../../core/ui/widgets/text_form_custom/screen/text_form_custom_screen.dart';
-import '../../core/utils/handle_dismiss_keyboard.dart';
 import '../state/add_event_cubit.dart';
 import '../state/add_event_state.dart';
 
@@ -28,7 +27,7 @@ class _AddEventState extends State<AddEvent> {
 
   @override
   Widget build(BuildContext context) {
-    return HandleDismissKeyboard(child: _buildAddEvent(context));
+    return _buildAddEvent(context);
   }
 
   Widget _buildAddEvent(BuildContext context) {

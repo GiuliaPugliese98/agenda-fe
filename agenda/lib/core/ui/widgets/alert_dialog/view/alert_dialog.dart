@@ -5,7 +5,6 @@ import '../../../../../generated/assets.dart';
 import '../../../../costants/string_constants.dart';
 import '../../../../enums/alert_dialog_enum.dart';
 import '../../../../enums/text_style_custom_enum.dart';
-import '../../../../utils/handle_dismiss_keyboard.dart';
 import '../../../theme/app_colors.dart';
 import '../../custom_button/custom_button.dart';
 import '../../text_label_custom.dart';
@@ -104,8 +103,7 @@ class AlertDialogPage extends StatelessWidget {
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
 
-    return HandleDismissKeyboard(
-      child: BlocBuilder<AlertDialogCubit, AlertDialogState>(
+    return BlocBuilder<AlertDialogCubit, AlertDialogState>(
         builder: (context, state) {
           return Center(
             child: SingleChildScrollView(
@@ -202,7 +200,6 @@ class AlertDialogPage extends StatelessWidget {
             ),
           );
         },
-      ),
     );
   }
 }
