@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 import 'dart:html';
 import '../costants/string_constants.dart';
@@ -14,12 +13,12 @@ class WebSocketManager {
         url: url,
         onConnect: onConnect,
         beforeConnect: () async {
-          print('Connessione al WebSocket...');
+          print('Connecting to WebSocket...');
         },
         stompConnectHeaders: {
           'Authorization': "Bearer $jwtToken",
         },
-        onWebSocketError: (dynamic error) => print('Errore: $error'),
+        onWebSocketError: (dynamic error) => print('Error: $error'),
       ),
     );
 
@@ -27,20 +26,20 @@ class WebSocketManager {
   }
 
   void onConnect(StompFrame frame) {
-    print('Connesso al WebSocket');
+    print('Connected to WebSocket');
 
     stompClient.subscribe(
       destination: StringConstants.webSocketDestination,
       callback: (frame) {
         try {
           if (frame.body != null) {
-            print('Notifica ricevuta: ${frame.body}');
+            print('Notification received: ${frame.body}');
             final notificationMap = jsonDecode(frame.body!) as Map<String, dynamic>;
             final notification = NotificationModel.fromJson(notificationMap);
             _showBrowserNotification(notification);
           }
         } catch (e) {
-          print('Errore nella gestione della notifica: $e');
+          print('Error handling notification: $e');
         }
       },
     );

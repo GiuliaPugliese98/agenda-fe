@@ -55,9 +55,9 @@ class AuthService {
       }
     } on DioError catch (e) {
       if (e.response != null) {
-        throw Exception('Errore di risposta: ${e.response?.data}');
+        throw Exception('Response error: ${e.response?.data}');
       } else {
-        throw Exception('Errore di richiesta: ${e.message}');
+        throw Exception('Response error: ${e.message}');
       }
     }
   }
