@@ -217,7 +217,7 @@ class Calendar extends StatelessWidget {
   Future showLogoutDialog(BuildContext context, CalendarCubit cubit) {
     return showDialog(
       context: context,
-      barrierDismissible: false, // Deve usare i bottoni per chiudere
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: TextLabelCustom(StringConstants.logoutMessage, align: TextAlign.center, styleEnum: TextStyleCustomEnum.bold),

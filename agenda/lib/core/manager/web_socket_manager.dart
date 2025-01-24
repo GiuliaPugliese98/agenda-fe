@@ -47,7 +47,7 @@ class WebSocketManager {
 
   void disconnect() {
     stompClient?.deactivate();
-    print('Disconnesso dal WebSocket');
+    print('Disconnected from WebSocket');
   }
 
   void _showBrowserNotification(NotificationModel notification) {
@@ -55,12 +55,10 @@ class WebSocketManager {
       Notification.requestPermission().then((permission) {
         if (permission == 'granted') {
           Notification(notification.title, body: notification.message);
-        } else {
-          print("Permesso per notifiche negato.");
         }
       });
     } else {
-      print("Le notifiche del browser non sono supportate.");
+      print("Notifications not supported");
     }
   }
 }

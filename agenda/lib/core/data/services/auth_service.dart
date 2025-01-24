@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -55,7 +56,11 @@ class AuthService {
       }
     } on DioError catch (e) {
       if (e.response != null) {
-        throw Exception('Response error: ${e.response?.data}');
+        if (e.response?.statusCode == HttpStatus.unauthorized) {
+          return null;
+        } else {
+          throw Exception('Response error: ${e.response?.data}');
+        }
       } else {
         throw Exception('Response error: ${e.message}');
       }
@@ -74,7 +79,7 @@ class AuthService {
 
   Future<bool> isLoggedIn() async {
     final token = await getToken();
-    return token != null;
+    return token != null && !tokenHasExpired(token);
   }
 
   bool tokenHasExpired(String? token) {
@@ -87,10 +92,6 @@ class AuthService {
     if (!tokenHasExpired(accessToken)) {
       return accessToken;
     }
-    final refreshTokenValue = await getRefreshToken();
-    if (!tokenHasExpired(refreshTokenValue)) {
-      return refreshToken();
-    }
-    return null;
+    return refreshToken();
   }
 }

@@ -103,13 +103,23 @@ class StringConstants {
   static const String startDate = "Start Date";
   static const String endDate = "End Date";
   static const String addNote = "Add note";
+  static const String attachments = "Attachments";
+  static const String uploadButton = "Upload File";
+  static const String emptyAttachments = "No attachments available";
   static const String eventDeleted = "Event deleted successfully";
   static const String eventDeletedNotFound = "Event deleted not found!";
   static const String eventRegistrationSuccessful = "Registered successfully";
   static const String eventUnregistrationSuccessful = "Unregistered successfully";
+  //Add note
   static const String eventAddNoteSuccessful = "Note added successfully";
+  static const String eventAddNoteFailed= "Failed to add note";
   static const String note = "Note";
   static const String noteHintText = "Enter your note here";
+  //Attachments
+  static const String attachmentUploadSuccessful = "Attachment uploaded successfully";
+  static const String attachmentUploadFailed = "Failed to upload attachment";
+  static const String attachmentDownloadSuccessful = "Attachment downloaded successfully";
+  static const String attachmentDownloadFailed = "Failed to download attachment";
 
   //Generic
   static const String success = "Success";

@@ -18,7 +18,7 @@ class SplashPage extends StatelessWidget {
                     builder: (context, state) {
                       if (state is SplashState) {
                         Future.delayed(
-                            Duration(seconds: 5), () {
+                            Duration(seconds: 2), () {
                           context.read<SplashCubit>().onInit();
                         });
                         return Container(child: _buildSplashWidget());

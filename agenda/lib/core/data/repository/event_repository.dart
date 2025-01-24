@@ -1,3 +1,5 @@
+import 'package:agenda/core/costants/string_constants.dart';
+
 import '../../network/api_client.dart';
 import '../../repository/base_repository.dart';
 import '../models/event_model/event_model.dart';
@@ -40,7 +42,7 @@ class EventRepository extends BaseRepository {
   }
 
   Future<void> addNoteToEvent(String eventUuid, String noteContent) async {
-    await apiClient.postNote('notes/$eventUuid', noteContent);
+    await apiClient.post('notes/$eventUuid', noteContent);
   }
 
   Future<void> uploadAttachment(
@@ -53,7 +55,7 @@ class EventRepository extends BaseRepository {
     try {
       await apiClient.postAttachments('/attachments/$eventUuid', formData);
     } catch (e) {
-      throw Exception("Failed to upload file: $e");
+      throw Exception(StringConstants.attachmentUploadFailed);
     }
   }
 
@@ -73,7 +75,7 @@ class EventRepository extends BaseRepository {
 
       html.Url.revokeObjectUrl(url); //clear temp url
     } catch (e) {
-      throw Exception("Failed to download failed: $e");
+      throw Exception(StringConstants.attachmentDownloadFailed);
     }
   }
 }

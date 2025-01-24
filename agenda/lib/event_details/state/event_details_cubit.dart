@@ -74,17 +74,16 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles();
       if (result != null) {
-        // Ottieni i dati del file come bytes
+        // Get file's data as bytes
         Uint8List? fileBytes = result.files.single.bytes;
         String fileName = result.files.single.name;
 
-        // Passa i bytes e il nome file al repository
         await eventRepository.uploadAttachment(eventUuid, fileBytes!, fileName);
-        loadEventDetails(eventUuid); // Ricarica i dettagli dell'evento
-        emit(EventDetailsSuccess(message: "File uploaded successfully"));
+        loadEventDetails(eventUuid);
+        emit(EventDetailsSuccess(message: StringConstants.attachmentUploadSuccessful));
       }
     } catch (e) {
-      emit(EventDetailsError(message: "Failed to upload file: ${e.toString()}"));
+      emit(EventDetailsError(message: StringConstants.attachmentUploadFailed));
     }
   }
 
@@ -92,9 +91,9 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
     emit(EventDetailsLoading());
     try {
       await eventRepository.downloadAttachment(attachmentId, fileName);
-      emit(EventDetailsSuccess(message: "File downloaded successfully"));
+      emit(EventDetailsSuccess(message: StringConstants.attachmentDownloadSuccessful));
     } catch (e) {
-      emit(EventDetailsError(message: "Failed to download file: ${e.toString()}"));
+      emit(EventDetailsError(message: StringConstants.attachmentDownloadFailed));
     }
   }
 
@@ -106,11 +105,11 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
       emit(
           EventDetailsSuccess(message: StringConstants.eventAddNoteSuccessful));
     } catch (e) {
-      emit(EventDetailsError(message: "Failed to add note: ${e.toString()}"));
+      emit(EventDetailsError(message: StringConstants.eventAddNoteFailed));
     }
   }
 
-
+  //Dialogs
   Future<void> showErrorDialog(
       BuildContext context, String message, String uuid) async {
     showAlertError(context, message, callbackConfirmButton: (){

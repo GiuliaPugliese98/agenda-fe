@@ -12,12 +12,11 @@ class AuthInterceptor extends Interceptor {
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    var token = await authService.getToken();
-    if (token == null || authService.tokenHasExpired(token)) {
-      token = await authService.loadAccessToken;
-    }
-    if (token != null &&
-        (!options.path.contains("auth") || options.path.contains("logout"))) {
+    if (!options.path.contains("auth") || options.path.contains("logout")) {
+      var token = await authService.getToken();
+      if (token == null || authService.tokenHasExpired(token)) {
+        token = await authService.loadAccessToken;
+      }
       options.headers['Authorization'] = 'Bearer $token';
     }
     handler.next(options);

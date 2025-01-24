@@ -69,29 +69,8 @@ class ApiClient {
     }
   }
 
-  Future<Map<String, dynamic>> post(
-      String endpoint, Map<String, dynamic> data) async {
-    try {
-      final response = await dio.post(endpoint, data: data);
-      return response.data;
-    } catch (e) {
-      if (e is DioError && e.response?.statusCode == HttpStatus.notFound) {
-        throw NotFoundException('Not found');
-      } else if (e is DioError &&
-          e.response?.statusCode == HttpStatus.internalServerError) {
-        throw InternalServerErrorException('Internal Server Error');
-      } else if (e is DioError &&
-          e.response?.statusCode == HttpStatus.unauthorized) {
-        throw UnauthorizedException('Unauthorized');
-      } else if (e is DioError &&
-          e.response?.statusCode == HttpStatus.conflict) {
-        throw ConflictException('Conflict');
-      }
-      rethrow;
-    }
-  }
-
-  Future<Map<String, dynamic>> postNote(String endpoint, String data) async {
+  Future<dynamic> post(
+      String endpoint, dynamic data) async {
     try {
       final response = await dio.post(endpoint, data: data);
       return response.data;

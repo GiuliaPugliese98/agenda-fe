@@ -1,4 +1,3 @@
-import 'package:agenda/calendar/state/calendar_cubit.dart';
 import 'package:agenda/core/data/models/user_model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -236,14 +235,14 @@ class EventDetails extends StatelessWidget {
                 // Sezione Attachments
                 SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                 TextLabelCustom(
-                  "Attachments",
+                  StringConstants.attachments,
                   styleEnum: TextStyleCustomEnum.bold,
                 ),
                 CustomButton(
                   onPressed: () {
                     context.read<EventDetailsCubit>().uploadAttachment(event.uuid);
                   },
-                  text: "Upload File",
+                  text: StringConstants.uploadButton,
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                 if (event.safeAttachments.isNotEmpty)
@@ -269,7 +268,7 @@ class EventDetails extends StatelessWidget {
                   )
                 else
                   TextLabelCustom(
-                    "No attachments available.",
+                    StringConstants.emptyAttachments,
                     styleEnum: TextStyleCustomEnum.italicNormal,
                   ),
               ],

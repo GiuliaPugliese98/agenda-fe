@@ -21,7 +21,7 @@ class CalendarCubit extends BaseCubit<CalendarState> {
   void loadEventsForMonth(DateTime month) async {
     emit(CalendarLoading());
     try {
-      final events = await eventRepository.getAllEvents(); //TODO per mese!
+      final events = await eventRepository.getAllEvents();
       emit(CalendarLoaded(events: events, currentMonth: month));
     } catch (e) {
       emit(CalendarError(e.toString()));
@@ -50,6 +50,6 @@ class CalendarCubit extends BaseCubit<CalendarState> {
 
   void logout() {
     userRepository.logout();
-    AppRoutes.pushNamed(Routes.preLogin);
+    AppRoutes.popUntilPrelogin();
   }
 }
