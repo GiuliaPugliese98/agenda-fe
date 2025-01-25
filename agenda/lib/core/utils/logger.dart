@@ -2,11 +2,11 @@ import 'package:flutter/widgets.dart';
 
 class Logger{
 
-  static void log(Object? message) {
-     debugPrint(message?.toString());
+  static void log(String message) {
+     debugPrint(message);
   }
 
-   static void logException(Exception ex) {
+   static void logException(Object ex) {
      debugPrint("*** EXCEPTION *** -> $ex");
    }
 

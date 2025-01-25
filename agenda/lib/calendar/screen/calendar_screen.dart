@@ -121,7 +121,7 @@ class Calendar extends StatelessWidget {
                     .where((event) => isSameDay(event.startDate, date))
                     .toList();
                 return Container(
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.unselected),
                     borderRadius: BorderRadius.circular(25),
@@ -145,9 +145,12 @@ class Calendar extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8), // Spazio tra data e eventi
-                      // Lista di eventi da qui
-                      Expanded(
+                      const SizedBox(height: 8), // Space between date and events
+                      // events list
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxHeight: 70, // to avoid events outside calendar box
+                        ),
                         child: ListView.builder(
                           itemCount: eventsForDay.length,
                           itemBuilder: (context, eventIndex) {
@@ -160,9 +163,9 @@ class Calendar extends StatelessWidget {
                                   );
                                 },
                                 child: Container(
-                                  margin: EdgeInsets.symmetric(
+                                  margin: const EdgeInsets.symmetric(
                                       vertical: 2, horizontal: 4),
-                                  padding: EdgeInsets.all(4),
+                                  padding: const EdgeInsets.all(4),
                                   decoration: BoxDecoration(
                                     color: event.createdByLoggedUser
                                         ? AppColors.mainColor
@@ -181,7 +184,7 @@ class Calendar extends StatelessWidget {
                                           : AppColors.blackText,
                                     ),
                                     overflow: TextOverflow
-                                        .ellipsis, // Mi serve per tagliare il testo se troppo lungo
+                                        .ellipsis, // cut text if it's too long
                                     maxLines: 1,
                                   ),
                                 ));

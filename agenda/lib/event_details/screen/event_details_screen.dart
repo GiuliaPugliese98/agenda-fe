@@ -103,7 +103,9 @@ class EventDetails extends StatelessWidget {
       children: [
         ...buildEventDetailsContent(context, event),
         SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-        //button register/unregister
+        //button register/unregister only if the event hasn't started yet
+        if (event.startDate.isAfter(DateTime.now()) ||
+            event.startDate.isAtSameMomentAs(DateTime.now()))
         Center(
           child: event.safeParticipantsEmails!.contains(user.email)
               ? CustomButton(
