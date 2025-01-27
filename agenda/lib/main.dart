@@ -6,8 +6,8 @@ import 'login/ui/user_controller.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 void main() {
-  initDependencies(); // Inizializza le dipendenze
-  Get.put(UserController()); // Inizializza il controller utente
+  initDependencies();
+  Get.put(UserController());
   setUrlStrategy(PathUrlStrategy());
   runApp(const MyApp());
 }
