@@ -1,6 +1,5 @@
 import 'package:agenda/core/costants/string_constants.dart';
 import '../../manager/web_socket_manager.dart';
-import '../../network/api_client.dart';
 import '../../repository/base_repository.dart';
 import '../models/user_credentials_model/user_credentials_model.dart';
 import '../models/user_model/user_model.dart';
@@ -10,7 +9,7 @@ class UserRepository extends BaseRepository {
   final AuthService authService;
   final WebSocketManager webSocketManager = WebSocketManager();
 
-  UserRepository(ApiClient apiClient, this.authService) : super(apiClient);
+  UserRepository(super.apiClient, this.authService);
 
   Future<UserModel> createUser(UserModel user) async {
     final response = await apiClient.post('auth/signup', user.toJson());

@@ -1,6 +1,5 @@
 import 'package:agenda/core/costants/string_constants.dart';
 
-import '../../network/api_client.dart';
 import '../../repository/base_repository.dart';
 import '../models/event_model/event_model.dart';
 import '../models/event_model_to_add/event_model_to_add.dart';
@@ -9,7 +8,7 @@ import 'dart:typed_data';
 import 'dart:html' as html;
 
 class EventRepository extends BaseRepository {
-  EventRepository(ApiClient apiClient) : super(apiClient);
+  EventRepository(super.apiClient);
 
   Future<List<EventModel>> getAllEvents() async {
     final response = await apiClient.getList('events');
@@ -23,10 +22,6 @@ class EventRepository extends BaseRepository {
 
   Future<void> createEvent(EventModelToAdd eventToAdd) async {
     await apiClient.post('events', eventToAdd.toJson());
-  }
-
-  Future<void> updateEvent(int eventId, EventModelToAdd updatedEvent) async {
-    await apiClient.put('events/$eventId', updatedEvent.toJson());
   }
 
   Future<void> deleteEvent(String eventUuid) async {
