@@ -83,7 +83,7 @@ class Calendar extends StatelessWidget {
       ],
       body: Column(
         children: [
-          // Riga dei giorni della settimana
+          // days of the week
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: daysOfWeek
@@ -109,7 +109,7 @@ class Calendar extends StatelessWidget {
               itemCount: daysInMonth + firstDayOfWeek - 1,
               itemBuilder: (context, index) {
                 if (index < firstDayOfWeek - 1) {
-                  return Container(); // Celle vuote per allineamento
+                  return Container(); // empty cells (needed for aligment)
                 }
                 final day = index - firstDayOfWeek + 2;
                 final date = DateTime(

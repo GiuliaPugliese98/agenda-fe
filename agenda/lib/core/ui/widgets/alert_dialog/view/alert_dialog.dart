@@ -149,7 +149,7 @@ class AlertDialogPage extends StatelessWidget {
                           ),
                         ),
 
-                      // Titolo
+                      // title
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: TextLabelCustom(

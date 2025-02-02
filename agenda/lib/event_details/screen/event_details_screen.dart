@@ -213,16 +213,16 @@ class EventDetails extends StatelessWidget {
                 event.safeParticipantsEmails.isEmpty
                     ? TextLabelCustom(StringConstants.emptyParticipants)
                     : SizedBox(
-                  height: 150, // Altezza limitata per far scorrere i partecipanti
+                  height: 150, // limited height to scroll participants
                   child: ListView.builder(
                     itemCount: event.safeParticipantsEmails.length,
                     itemBuilder: (context, index) {
                       return Container(
-                        margin: const EdgeInsets.symmetric(vertical: 4.0), // Spaziatura tra i riquadri
-                        padding: const EdgeInsets.all(8.0), // Spaziatura interna del riquadro
+                        margin: const EdgeInsets.symmetric(vertical: 4.0), // Spaces between sections
+                        padding: const EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
                           color: AppColors.backgroundColor,
-                          borderRadius: BorderRadius.circular(8.0), // Angoli arrotondati
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: TextLabelCustom(
                           event.safeParticipantsEmails[index],
@@ -234,7 +234,7 @@ class EventDetails extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                // Sezione Attachments
+                // Attachments
                 SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                 TextLabelCustom(
                   StringConstants.attachments,
@@ -312,7 +312,7 @@ class EventDetails extends StatelessWidget {
 
     return showDialog(
       context: context,
-      barrierDismissible: false, // Deve usare i bottoni per chiudere
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
