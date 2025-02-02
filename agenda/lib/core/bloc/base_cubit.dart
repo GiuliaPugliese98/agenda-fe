@@ -18,7 +18,7 @@ abstract class BaseCubit<S extends BaseState> extends Cubit<S> {
     AppRoutes.showCustomDialog(
         context,
         AlertDialogPage(
-            title: StringConstants.generic_error_title,
+            title: StringConstants.genericErrorTitle,
             message: message,
             callbackConfirm: callbackConfirmButton,
             callbackUndo: callbackUndoButton,

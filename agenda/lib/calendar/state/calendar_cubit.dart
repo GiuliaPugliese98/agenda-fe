@@ -1,9 +1,7 @@
 import 'package:agenda/core/data/repository/user_repository.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../../core/bloc/base_cubit.dart';
-import '../../core/costants/string_constants.dart';
 import '../../core/data/repository/event_repository.dart';
 import '../../core/ui/app_routes/routes.dart';
 import '../../core/ui/app_routes/routes_constants.dart';

@@ -42,18 +42,10 @@ class StringConstants {
   static const String registrationError = "Registration failed, please try again!";
 
   //Alert
-  static const String internet_problem = "Internet Problem";
-  static const String internet_problem_message = "No Internet access available, check your Internet connection and try again";
-  static const String retry = "Retry";
-  static const String generic_error_title = "Oops, something went wrong";
-  static const String generic_error_message = "A problem occurred. Try again in a few minutes";
-  static const String server_error_message = "An error occurred while loading the data, please try again";
+  static const String genericErrorTitle = "Oops, something went wrong";
   static const String ok = "Ok";
-  static const String success_title = "Congratulations!";
-  static const String success_message = "The operation was successfully completed.";
+  static const String successTitle = "Congratulations!";
   static const String alertDialogButtonCancel = "Cancel";
-  static const String alertDialogButtonConfirm = "Confirm";
-  static const String alertDialogButtonHome = "Return to Home Page";
 
   static const String logout = "Logout";
   static const String logoutMessage = "Do you really want to log out from your account?";

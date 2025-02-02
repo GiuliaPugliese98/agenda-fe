@@ -1,5 +1,4 @@
 import 'package:agenda/core/costants/string_constants.dart';
-
 import '../../repository/base_repository.dart';
 import '../models/event_model/event_model.dart';
 import '../models/event_model_to_add/event_model_to_add.dart';
@@ -59,16 +58,19 @@ class EventRepository extends BaseRepository {
       final response = await apiClient.getAttachments('/attachments/$attachmentId/download',
           options: Options(responseType: ResponseType.bytes));
 
+      // Create a Blob from the downloaded data
       final blob = html.Blob([response.data]);
+      // Generate a temporary URL for the Blob
       final url = html.Url.createObjectUrlFromBlob(blob);
 
-      //creating temp url
+      // Create an invisible anchor element to trigger the download
       html.AnchorElement(href: url)
-        ..target = 'blank'
-        ..download = fileName
-        ..click();
+        ..target = 'blank' // Open in a new tab
+        ..download = fileName // Set the filename for the downloaded file
+        ..click(); // Simulate a click to start the download
 
-      html.Url.revokeObjectUrl(url); //clear temp url
+      // Revoke the object URL to free up memory
+      html.Url.revokeObjectUrl(url);
     } catch (e) {
       throw Exception(StringConstants.attachmentDownloadFailed);
     }

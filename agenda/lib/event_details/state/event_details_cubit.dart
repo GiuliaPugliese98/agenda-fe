@@ -127,7 +127,7 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
         Routes.eventDetail,
         pathParameters: {'uuid': uuid},
       );
-    }, StringConstants.success_title, message, StringConstants.ok);
+    }, StringConstants.successTitle, message, StringConstants.ok);
   }
 
   Future<void> showDeleteSuccessDialog(
@@ -140,6 +140,6 @@ class EventDetailsCubit extends BaseCubit<EventDetailsState> {
         Routes.calendar,
         pathParameters: {'month': month, 'year': year},
       );
-    }, StringConstants.success_title, message, StringConstants.ok);
+    }, StringConstants.successTitle, message, StringConstants.ok);
   }
 }

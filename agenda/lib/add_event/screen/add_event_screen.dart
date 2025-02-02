@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -209,7 +208,7 @@ class _AddEventState extends State<AddEvent> {
   }
 
   Future<TimeOfDay?> _selectTime(BuildContext context,
-      {DateTime? pickedDate = null, bool isEndDate = false}) async {
+      {DateTime? pickedDate, bool isEndDate = false}) async {
     final initialTime = TimeOfDay.now();
     final selectedTime = await showTimePicker(
       context: context,
