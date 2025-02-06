@@ -25,7 +25,7 @@ class AuthInterceptor extends Interceptor {
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) async {
     try {
-      if (err.response?.statusCode == HttpStatus.forbidden || err.response?.statusCode == HttpStatus.unauthorized) {
+      if (err.response?.statusCode == HttpStatus.forbidden || (err.response?.statusCode == HttpStatus.unauthorized && !(AppRoutes.router.location == Routes.login))) {
         AppRoutes.pushNamed(Routes.preLogin);
       } else {
         handler.next(err);

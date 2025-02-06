@@ -34,7 +34,7 @@ class Login extends StatelessWidget {
         child: BlocListener<LoginCubit, LoginState>(listener: (context, state) {
           if (state is LoginInitial) {
             const Center(child: CircularProgressIndicator());
-          }if (state is LoginLoading) {
+          } else if (state is LoginLoading) {
             const Center(child: CircularProgressIndicator());
           } else if (state is LoginSuccess) {
             final userController = Get.find<UserController>();
