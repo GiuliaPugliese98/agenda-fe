@@ -13,9 +13,8 @@ void _initServices() {
   final AuthService authService = AuthService();
   Get.put<AuthService>(authService);
 
-  //to run locally http://192.168.133.90:8080/
   final ApiClient apiClient = ApiClient(
-    baseUrl: 'http://backend:8080/',
+    baseUrl: 'http://192.168.133.90:8080/',
     authService: authService,
   );
   Get.put<ApiClient>(apiClient);
