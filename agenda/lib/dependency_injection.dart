@@ -14,7 +14,7 @@ void _initServices() {
   Get.put<AuthService>(authService);
 
   final ApiClient apiClient = ApiClient(
-    baseUrl: 'http://192.168.118.1:8080/',
+    baseUrl: 'http://192.168.133.90:8080/',
     authService: authService,
   );
   Get.put<ApiClient>(apiClient);
